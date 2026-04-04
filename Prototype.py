@@ -31,9 +31,9 @@
 
 # Creating variables and setting up foundational information ----------------------------------------+
 print("Available vendors:\n 1. Dolly Dogs\n 2. Korner Kart")                                         #
-available_vendors = ['Dolly Dogs', 'Korner Kart']                                                    #
-search_query = str(input("\nPlease enter the name of the vendor you would like to search (2-25): ")) #
-hotdog_data = []                                                                                     #
+available_vendors = ['Dolly Dogs', 'Korner Kart']                                                    # List of available vendors
+search_query = str(input("\nPlease enter the name of the vendor you would like to search (2-25): ")) # >user inputs search query here
+hotdog_data = []                                                                                     # Creating placeholder list for 'hotdog.txt' 
 length_check = False                                                                                 #
 available_check = False                                                                              #
 #----------------------------------------------------------------------------------------------------+
@@ -41,8 +41,8 @@ available_check = False                                                         
 # Looping validations for 'search_query' ---------------------------------------------------+ [D]
 while length_check != True or available_check != True:                                      #
     # Length Validaton -------------------------------------+                               #
-    if len(search_query) >= 2 and len(search_query) <= 25:  #                               #
-        length_check = True                                 #                               #
+    if len(search_query) >= 2 and len(search_query) <= 25:  #                               # "If the length of the search is between the inclusive range of 2 to 25...
+        length_check = True                                 #                               # "...the length check becomes true."
         # Presence Check ----+                              #                               #
     elif search_query == "": #                              #                               #
         length_check = False #                              #                               #
@@ -118,11 +118,10 @@ while query_check != True:                                       #
         for i in [0, len(hotdog_data)]:                          #
             while user_search < 1 or user_search > 7:            #
                 user_search = int(input("Category not found, ensure input is within range: "))
+        if user_search > 1 or user_search < 7:                   #
+           query_check = True                                    #
     except ValueError:                                           #
         print("Input is not an integer.")                        #
-    finally:                                                     #
-        if user_search > 1 or user_search < 7:                   #
-            query_check = True                                   #
 #----------------------------------------------------------------|
 
 # SEARCH --------------------------------------------------------------------+
