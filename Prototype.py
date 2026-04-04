@@ -14,8 +14,9 @@
 '''
 # The bottom of the python file has repository links. Show line numbers for easier locating.
 # +-----------------------------------------------------------------------------------+-----------+
-# | Requirements:                                                                     | Complete? |
+# | Milestones:                                                                       | Complete? |
 # +-----------------------------------------------------------------------------------+-----------+
+# | 0. Read the data from the text file.                                              |     Y     |
 # | 1. Linear search the data when it is sorted.                                      |     N     |
 # | 2. Linear search the data when it is unsorted.                                    |     N     |
 # | 3. Search the data using a binary search.                                         |     N     |
@@ -30,14 +31,14 @@
 
 # Creating variables and setting up foundational information ----------------------------------------+
 print("Available vendors:\n 1. Dolly Dogs\n 2. Korner Kart")                                         #
-available_vendors = ['blank', 'Dolly Dogs', 'Korner Kart']                                           #
-metadata = []                                                                                        #
+available_vendors = ['Dolly Dogs', 'Korner Kart']                                                    #
 search_query = str(input("\nPlease enter the name of the vendor you would like to search (2-25): ")) #
+hotdog_data = []                                                                                     #
 length_check = False                                                                                 #
 available_check = False                                                                              #
 #----------------------------------------------------------------------------------------------------+
 
-# Looping validations for 'search_query' ---------------------------------------------------+ #[D]
+# Looping validations for 'search_query' ---------------------------------------------------+ [D]
 while length_check != True or available_check != True:                                      #
     # Length Validaton -------------------------------------+                               #
     if len(search_query) >= 2 and len(search_query) <= 25:  #                               #
@@ -57,25 +58,14 @@ while length_check != True or available_check != True:                          
         search_query = str(input("Vendor not found, or name out of length range (2-25): ")) #
 #-------------------------------------------------------------------------------------------#
 
-# Dictionary handling ----------------------+ [E]
+# Array handling ---------------------------+ [E]
 file = open("hotdogs.txt", "r")             #
 for line in file:  #[A]                     #
     if line.find(search_query) != -1:       #
         parts = line.strip().split(",")     #
-        data = {                            #
-            "vendor_id": parts[0],          #
-            "vendor_name": parts[1],        #
-            "year_week": parts[2],          #
-            "vegan_hotdogs": int(parts[3]), #
-            "meat_hotdogs": int(parts[4]),  #
-            "onions": float(parts[5]),      #
-            "ketchup": float(parts[6]),     #
-        }                                   #
+        hotdog_data.append(parts)           #
     else:                                   #
         continue                            #
-    # Adding dictionary to list --+         #
-    metadata.append(data)         #         #
-    #-----------------------------+         #
 #-------------------------------------------#
 
 # Defining search algorithms ---------------------------------+ [F]
@@ -115,22 +105,44 @@ def binary_search(items, target):                             #
         passes += 1                                           #
 #-------------------------------------------------------------+
 
-# User-inputted category search -----------------------------------------------------|
-print("\nAvailable categories:\n 1. vendor_id\n 2. vendor_name\n 3. year_week\n 4. vegan_hotdogs\n 5. meat_hotdogs\n 6. onions\n 7. ketchup")
-user_search = str(input("\nWhat category would you like to search the data in? "))   #
-while user_search not in data:                                                       #
-    user_search = str(input("Category not found, ensure underscores are present: ")) #
-target_filter = user_search                                                          #
+# Defining sort algorithms --?
 
+#----------------------------?
 
-#------------------------------------------------------------------------------------|
+# User-inputted category search ---------------------------------|
+query_check = False                                              #
+print("\nAvailable categories:\n 1. vendor_id\n 2. vendor_name\n 3. year_week\n 4. vegan_hotdogs\n 5. meat_hotdogs\n 6. onions\n 7. ketchup\n")
+while query_check != True:                                       #
+    try:                                                         #
+        user_search = int(input("What category would you like to search the data in? (Enter a number from 1 to 7): "))   #
+        for i in [0, len(hotdog_data)]:                          #
+            while user_search < 1 or user_search > 7:            #
+                user_search = int(input("Category not found, ensure input is within range: "))
+    except ValueError:                                           #
+        print("Input is not an integer.")                        #
+    finally:                                                     #
+        if user_search > 1 or user_search < 7:                   #
+            query_check = True                                   #
+#----------------------------------------------------------------|
+
+# SEARCH --------------------------------------------------------------------+
+file = open("hotdogs.txt", "r")
+a = 0
+
+def filter_scraper(target_filter, data):
+    for line in file:
+        if line.find(hotdog_data[user_search-1]) == -1:
+            print(hotdog_data)
+
+filter_scraper(user_search, hotdog_data)
+#----------------------------------------------------------------------------+
 
 # +------------------+
 # | Repository Links |
 # +------------------+
-# | Line 40 - [D]    |
-# | Line 60 - [E]    |
-# | Line 62 - [A]    |
+# | Line 41 - [D]    |
+# | Line 61 - [E]    |
+# | Line 63 - [A]    |
 # | Line 82 - [F]    |
 # | Line ?? - [?]    |
 # | Line ?? - [?]    |
@@ -149,3 +161,13 @@ target_filter = user_search                                                     
 # | Line ?? - [?]    |
 # | Line ?? - [?]    |
 # +------------------+
+
+# +------+------------------------------------------------------------------------------------+
+# | Line | Diary                                                                              |
+# +------+------------------------------------------------------------------------------------+
+# | 33   | 1. This doesn't skim the file for every vendor name and format it into Title Case. |
+# | 1??  | 2. I feel like there is a much simpler way to extract a variable from an array.    |
+# | ???  | 3. ???                                                                             |
+# | ???  | 4. ???                                                                             |
+# | ???  | 5. ???                                                                             |
+# +-------------------------------------------------------------------------------------------+
