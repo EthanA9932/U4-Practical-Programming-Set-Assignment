@@ -58,7 +58,7 @@ while length_check != True or available_check != True:                          
         search_query = str(input("Vendor not found, or name out of length range (2-25): ")) #
 #-------------------------------------------------------------------------------------------#
 
-# Array handling ---------------------------+ [E]
+# Array handling ---------------------------+
 file = open("hotdogs.txt", "r")             #
 for line in file:  #[A]                     #
     if line.find(search_query) != -1:       #
@@ -68,8 +68,8 @@ for line in file:  #[A]                     #
         continue                            #
 #-------------------------------------------#
 
-# Defining search algorithms ---------------------------------+ [F]
-def linear_search(items, target):                             #
+# Defining search algorithms ---------------------------------+ 
+def linear_search(items, target):                             # [E] LINEAR SEARCH
     index = 0                                                 #
     found = False                                             #
                                                               #
@@ -83,7 +83,7 @@ def linear_search(items, target):                             #
     if found == False:                                        #
         print(f"{target} not found.")                         #
                                                               #
-def binary_search(items, target):                             #
+def binary_search(items, target):                             # [F] BINARY SEARCH:
     found = False                                             # 
     first = 0                                                 #
     last = len(items) - 1                                     #
@@ -105,9 +105,24 @@ def binary_search(items, target):                             #
         passes += 1                                           #
 #-------------------------------------------------------------+
 
-# Defining sort algorithms --?
-
-#----------------------------?
+# Defining sort algorithms ----------------------------------------------+
+def bubble_sort(items, target):                                          # BUBBLE SORT:
+    n = len(items)                                                       #
+    for i in range(n):                                                   #
+        for j in range(0, n - i - 1):                                    #
+            if items[j] > items[j + 1]:                                  #
+                items[j], items[j + 1] = items[j + 1], items[j]          #
+    return items                                                         #
+                                                                         #
+def quick_sort(items, target):                                           # QUICK SORT:
+    if len(items) <= 1:                                                  #
+        return items                                                     #
+    pivot = items[len(items) // 2]                                       #
+    left = [x for x in items if x < pivot]                               #
+    middle = [x for x in items if x == pivot]                            #
+    right = [x for x in items if x > pivot]                              #
+    return quick_sort(left, target) + middle + quick_sort(right, target) #
+#------------------------------------------------------------------------+ 
 
 # User-inputted category search ---------------------------------|
 query_check = False                                              #
@@ -124,25 +139,48 @@ while query_check != True:                                       #
         print("Input is not an integer.")                        #
 #----------------------------------------------------------------|
 
-# SEARCH --------------------------------------------------------------------+
+# Filtering data ------------------------------------------------------------+
 file = open("hotdogs.txt", "r")
 a = 0
 
-def filter_scraper(target_filter, data):
+def filter_scraper(target_filter, vendor_name, data):
+    items = []
+    i = 0
     for line in file:
-        if line.find(hotdog_data[user_search-1]) == -1:
-            print(hotdog_data)
+        i += 1
+        segment = []
+        line = line.strip().split(",")
+        if vendor_name in line:
+            segment = [i, line[target_filter-1]]
+            items.extend(segment)
+    print(f"{target_filter} for {vendor_name}: {items}")
+    return items
 
-filter_scraper(user_search, hotdog_data)
+filter_scraper(user_search, search_query, hotdog_data)
 #----------------------------------------------------------------------------+
+
+# Sorting if wanted =-----------+
+sort_input = str(input("\nWould you like to sort the data before searching? (Y/N): "))
+if sort_input == "Y":
+    # Sort algorithm here
+    print("Sorting data...")
+#=-------------------------------
+
+# Searching ---------------?
+search_input = str(input("What is your search query?: "))
+while search_input not in items:
+    search_input = str(input("Query not found, please enter a valid query: "))
+
+linear_search(items, search_input)
+#--------------------------?
 
 # +------------------+
 # | Repository Links |
 # +------------------+
 # | Line 41 - [D]    |
-# | Line 61 - [E]    |
 # | Line 63 - [A]    |
-# | Line 82 - [F]    |
+# | Line 72 - [E]    |
+# | Line 86 - [F]    |
 # | Line ?? - [?]    |
 # | Line ?? - [?]    |
 # | Line ?? - [?]    |
@@ -164,9 +202,9 @@ filter_scraper(user_search, hotdog_data)
 # +------+------------------------------------------------------------------------------------+
 # | Line | Diary                                                                              |
 # +------+------------------------------------------------------------------------------------+
-# | 33   | 1. This doesn't skim the file for every vendor name and format it into Title Case. |
-# | 1??  | 2. I feel like there is a much simpler way to extract a variable from an array.    |
-# | ???  | 3. ???                                                                             |
-# | ???  | 4. ???                                                                             |
-# | ???  | 5. ???                                                                             |
+# |   35 | 1. This doesn't skim the file for every vendor name and format it into Title Case. |
+# |  1?? | 2. I feel like there is a much simpler way to extract a variable from an array.    |
+# |  ??? | 3. ???                                                                             |
+# |  ??? | 4. ???                                                                             |
+# |  ??? | 5. ???                                                                             |
 # +-------------------------------------------------------------------------------------------+
