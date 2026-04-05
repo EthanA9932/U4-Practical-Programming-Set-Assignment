@@ -1,0 +1,6 @@
+Analysis of hotdog data:
+Vendor searched: Dolly Dogs
+Number of vegan hotdogs supplied: 0
+Number of meat hotdogs supplied: 0
+Total amount of onions supplied: 0
+Total amount of ketchup supplied: 0

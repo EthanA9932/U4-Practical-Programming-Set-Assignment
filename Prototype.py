@@ -76,19 +76,19 @@ def linear_search(items, target):                             # [E] LINEAR SEARC
     while found == False and index < len(items):              #
         if target == items[index]:                            #
             found = True                                      #
-            print(f"Found {target} at {index+1}.")            #
         else:                                                 #
             index += 1                                        #
                                                               #
     if found == False:                                        #
         print(f"{target} not found.")                         #
+    print(f"Found {target} after {index} step(s).")           #
                                                               #
 def binary_search(items, target):                             # [F] BINARY SEARCH:
     found = False                                             # 
     first = 0                                                 #
     last = len(items) - 1                                     #
     midpoint = 0                                              #
-    passes = 0                                                #
+    steps = 0                                                 #
                                                               #
     while first <= last and found == False:                   #
         midpoint = (first + last) / 2                         #
@@ -97,31 +97,39 @@ def binary_search(items, target):                             # [F] BINARY SEARC
             midpoint = int(midpoint)                          #
         if items[midpoint] == target:                         #
             found = True                                      #
-            print(f"Found {target} after {passes} pass(es).") #
         elif items[midpoint] < target:                        #
             first = midpoint + 1                              #
         else:                                                 #
             last = midpoint - 1                               #
-        passes += 1                                           #
+        steps += 1                                            #
+    print(f"Found {target} after {steps} step(s).")           #
 #-------------------------------------------------------------+
 
 # Defining sort algorithms ----------------------------------------------+
-def bubble_sort(items, target):                                          # BUBBLE SORT:
+def bubble_sort(items):                                                  # BUBBLE SORT:
+    swaps = 0                                                            #
     n = len(items)                                                       #
     for i in range(n):                                                   #
         for j in range(0, n - i - 1):                                    #
             if items[j] > items[j + 1]:                                  #
                 items[j], items[j + 1] = items[j + 1], items[j]          #
+                swaps += 1                                               #
+    print(f"Sorted after {swaps} swap(s).")                              #
     return items                                                         #
                                                                          #
-def quick_sort(items, target):                                           # QUICK SORT:
+def quick_sort(items):                                                   # QUICK SORT:
+    swaps = 0                                                            #
     if len(items) <= 1:                                                  #
         return items                                                     #
     pivot = items[len(items) // 2]                                       #
     left = [x for x in items if x < pivot]                               #
+    swaps += len(left)                                                   #
     middle = [x for x in items if x == pivot]                            #
+    swaps += len(middle)                                                 #
     right = [x for x in items if x > pivot]                              #
-    return quick_sort(left, target) + middle + quick_sort(right, target) #
+    swaps += len(right)                                                  #
+    print(f"Sorted after {swaps} swap(s).")                              #
+    return quick_sort(left) + middle + quick_sort(right)                 #
 #------------------------------------------------------------------------+ 
 
 # User-inputted category search ---------------------------------|
@@ -140,39 +148,89 @@ while query_check != True:                                       #
 #----------------------------------------------------------------|
 
 # Filtering data ------------------------------------------------------------+
-file = open("hotdogs.txt", "r")
-a = 0
-
-def filter_scraper(target_filter, vendor_name, data):
-    items = []
-    i = 0
-    for line in file:
-        i += 1
-        segment = []
-        line = line.strip().split(",")
-        if vendor_name in line:
-            segment = [i, line[target_filter-1]]
-            items.extend(segment)
-    print(f"{target_filter} for {vendor_name}: {items}")
-    return items
-
-filter_scraper(user_search, search_query, hotdog_data)
+file = open("hotdogs.txt", "r")                                              #
+                                                                             #
+def filter_scraper(target_filter, vendor_name, data, hidden):                #
+    items = []                                                               #
+    i = 0                                                                    #
+    for line in file:                                                        #
+        i += 1                                                               #
+        segment = []                                                         #
+        line = line.strip().split(",")                                       #
+        if vendor_name in line:                                              #
+            segment = line[target_filter-1]                                  #
+            items.append(segment)                                            #
+    if not hidden:                                                           #
+        print(f"{target_filter} for {vendor_name}: {items}")                 #
+    return items                                                             #
+                                                                             #
+items = filter_scraper(user_search, search_query, hotdog_data, hidden=False) #
 #----------------------------------------------------------------------------+
 
-# Sorting if wanted =-----------+
+# Sorting if wanted =-----------/
 sort_input = str(input("\nWould you like to sort the data before searching? (Y/N): "))
+sort_options = ["Bubble Sort", "Quick Sort"]
+while sort_input != "Y" and sort_input != "N":
+    sort_input = str(input("Invalid input, please enter Y or N: "))
 if sort_input == "Y":
-    # Sort algorithm here
-    print("Sorting data...")
-#=-------------------------------
+    sort_choice = str(input(f"Which sorting algorithm would you like to use? ({sort_options[0]}/{sort_options[1]}): "))
+    while sort_choice not in sort_options:
+        sort_choice = str(input("Invalid input, please enter a valid sorting algorithm: "))
+    if sort_choice == sort_options[0]:
+        items = bubble_sort(items)
+    else:
+        items = quick_sort(items) 
+#--------------------------------/
 
 # Searching ---------------?
 search_input = str(input("What is your search query?: "))
 while search_input not in items:
     search_input = str(input("Query not found, please enter a valid query: "))
 
-linear_search(items, search_input)
+search_options = ["Linear Search", "Binary Search"]
+search_choice = str(input(f"Which searching algorithm would you like to use? ({search_options[0]}/{search_options[1]}): "))
+while search_choice not in search_options:
+    search_choice = str(input("Invalid input, please enter a valid searching algorithm: "))
+if search_choice == search_options[0]:
+    linear_search(items, search_input)
+else:
+    binary_search(items, search_input)
 #--------------------------?
+
+# Secondary variable association -------------------------------------+
+v_hotdogs = filter_scraper(4, search_query, hotdog_data, hidden=True) #                                                           #
+total_v_hotdogs = 0                                                   #
+for i in v_hotdogs:                                                   #
+    total_v_hotdogs += v_hotdogs                                      #
+                                                                      #
+m_hotdogs = filter_scraper(5, search_query, hotdog_data, hidden=True) #
+total_m_hotdogs = 0                                                   #
+for i in m_hotdogs:                                                   #
+    total_m_hotdogs += m_hotdogs                                      #
+                                                                      #
+onions = filter_scraper(6, search_query, hotdog_data, hidden=True)    #
+total_onions = 0                                                      #
+for i in onions:                                                      #
+    total_onions += onions                                            #
+                                                                      #
+ketchup = filter_scraper(7, search_query, hotdog_data, hidden=True)   #
+total_ketchup = 0                                                     #
+for i in ketchup:                                                     #
+    total_ketchup += ketchup                                          #
+
+print(total_v_hotdogs, total_m_hotdogs, total_onions, total_ketchup)
+#---------------------------------------------------------------------?
+
+# Analysis output ---------------------------------------------------+
+file = open("analysis.txt", "w")                                     #
+file.write("Analysis of hotdog data:\n")                             #
+file.write(f"Vendor searched: {search_query}\n")                     #
+file.write(f"Number of vegan hotdogs supplied: {total_v_hotdogs}\n") #
+file.write(f"Number of meat hotdogs supplied: {total_m_hotdogs}\n")  #
+file.write(f"Total amount of onions supplied: {total_onions}\n")     #
+file.write(f"Total amount of ketchup supplied: {total_ketchup}\n")   #
+file.close()                                                         #    
+#--------------------------------------------------------------------+
 
 # +------------------+
 # | Repository Links |
