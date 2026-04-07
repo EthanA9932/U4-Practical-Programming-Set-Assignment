@@ -17,11 +17,11 @@
 # | Milestones:                                                                       | Complete? |
 # +-----------------------------------------------------------------------------------+-----------+
 # | 0. Read the data from the text file.                                              |     Y     |
-# | 1. Linear search the data when it is sorted.                                      |     N     |
-# | 2. Linear search the data when it is unsorted.                                    |     N     |
-# | 3. Search the data using a binary search.                                         |     N     |
-# | 4. Sort the data using a bubble sort.                                             |     N     |
-# | 5. Sort the data using a quick sort.                                              |     N     |
+# | 1. Linear search the data when it is sorted.                                      |     Y     |
+# | 2. Linear search the data when it is unsorted.                                    |     Y     |
+# | 3. Search the data using a binary search.                                         |     Y     |
+# | 4. Sort the data using a bubble sort.                                             |     Y     |
+# | 5. Sort the data using a quick sort.                                              |     Y     |
 # | 6. Compare the efficiency (execution time) of the different searches.             |     N     |
 # | 7. Compare the efficiency (execution time) of the different sorts.                |     N     |
 # | 8. Provide analysis for the user (most productive vendor, number of vegan hotdogs |     N     |
@@ -30,6 +30,7 @@
 # +-----------------------------------------------------------------------------------+-----------+
 
 # Creating variables and setting up foundational information ----------------------------------------+
+import math
 print("Available vendors:\n 1. Dolly Dogs\n 2. Korner Kart")                                         #
 available_vendors = ['Dolly Dogs', 'Korner Kart']                                                    # List of available vendors
 search_query = str(input("\nPlease enter the name of the vendor you would like to search (2-25): ")) # >user inputs search query here
@@ -198,47 +199,55 @@ else:
 #--------------------------?
 
 # Secondary variable association -------------------------------------+
+file = open("hotdogs.txt", "r")                                       #
+                                                                      #
 v_hotdogs = filter_scraper(4, search_query, hotdog_data, hidden=True) #                                                           #
 total_v_hotdogs = 0                                                   #
 for i in v_hotdogs:                                                   #
-    total_v_hotdogs += v_hotdogs                                      #
+    total_v_hotdogs += float(i)                                       #
                                                                       #
 m_hotdogs = filter_scraper(5, search_query, hotdog_data, hidden=True) #
 total_m_hotdogs = 0                                                   #
 for i in m_hotdogs:                                                   #
-    total_m_hotdogs += m_hotdogs                                      #
+    total_m_hotdogs += float(i)                                       #
                                                                       #
 onions = filter_scraper(6, search_query, hotdog_data, hidden=True)    #
 total_onions = 0                                                      #
 for i in onions:                                                      #
-    total_onions += onions                                            #
+    total_onions += float(i)                                          #
                                                                       #
 ketchup = filter_scraper(7, search_query, hotdog_data, hidden=True)   #
 total_ketchup = 0                                                     #
 for i in ketchup:                                                     #
-    total_ketchup += ketchup                                          #
-
-print(total_v_hotdogs, total_m_hotdogs, total_onions, total_ketchup)
+    total_ketchup += float(i)                                         #
+                                                                      #
+file.close()                                                          #
 #---------------------------------------------------------------------?
 
 # Analysis output ---------------------------------------------------+
-file = open("analysis.txt", "w")                                     #
-file.write("Analysis of hotdog data:\n")                             #
-file.write(f"Vendor searched: {search_query}\n")                     #
-file.write(f"Number of vegan hotdogs supplied: {total_v_hotdogs}\n") #
-file.write(f"Number of meat hotdogs supplied: {total_m_hotdogs}\n")  #
-file.write(f"Total amount of onions supplied: {total_onions}\n")     #
-file.write(f"Total amount of ketchup supplied: {total_ketchup}\n")   #
-file.close()                                                         #    
+file = open("analysis.txt", "w")
+file.write("Analysis of hotdog data:\n")
+file.write(f"Vendor searched: {search_query}\n")
+file.write(f"Number of vegan hotdogs supplied: {total_v_hotdogs}\n")
+file.write(f"Number of meat hotdogs supplied: {total_m_hotdogs}\n")
+file.write(f"Total amount of onions supplied: {total_onions}\n")
+file.write(f"Total amount of ketchup supplied: {total_ketchup}\n")
+file.write(f"-------------------------------------------------------\n")
+file.write(f"Algorithm comparisons:\n")
+file.write(f"Linear search found {search_input} in {len(items)} steps.\n")
+file.write(f"Binary search found {search_input} in {len(items) // 2} steps.\n")
+file.write(f"Bubble sort sorted {len(items)} items in {len(items) ** 2} steps.\n")
+file.write(f"Quick sort sorted {len(items)} items in {len(items) * math.log(len(items))} steps.\n")
+file.close()   
 #--------------------------------------------------------------------+
 
 # +------------------+
 # | Repository Links |
 # +------------------+
-# | Line 41 - [D]    |
-# | Line 63 - [A]    |
-# | Line 72 - [E]    |
-# | Line 86 - [F]    |
+# | Line 42 - [D]    |
+# | Line 64 - [A]    |
+# | Line 73 - [E]    |
+# | Line 87 - [F]    |
 # | Line ?? - [?]    |
 # | Line ?? - [?]    |
 # | Line ?? - [?]    |
@@ -260,7 +269,7 @@ file.close()                                                         #
 # +------+------------------------------------------------------------------------------------+
 # | Line | Diary                                                                              |
 # +------+------------------------------------------------------------------------------------+
-# |   35 | 1. This doesn't skim the file for every vendor name and format it into Title Case. |
+# |   36 | 1. This doesn't skim the file for every vendor name and format it into Title Case. |
 # |  1?? | 2. I feel like there is a much simpler way to extract a variable from an array.    |
 # |  ??? | 3. ???                                                                             |
 # |  ??? | 4. ???                                                                             |
