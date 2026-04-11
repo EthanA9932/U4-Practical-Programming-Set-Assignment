@@ -149,9 +149,8 @@ while query_check != True:                                       #
 #----------------------------------------------------------------|
 
 # Filtering data ------------------------------------------------------------+
-file = open("hotdogs.txt", "r")                                              #
-                                                                             #
 def filter_scraper(target_filter, vendor_name, data, hidden):                #
+    file = open("hotdogs.txt", "r")                                          #
     items = []                                                               #
     i = 0                                                                    #
     for line in file:                                                        #
@@ -164,6 +163,7 @@ def filter_scraper(target_filter, vendor_name, data, hidden):                #
     if not hidden:                                                           #
         print(f"{target_filter} for {vendor_name}: {items}")                 #
     return items                                                             #
+    file.close()                                                             #
                                                                              #
 items = filter_scraper(user_search, search_query, hotdog_data, hidden=False) #
 #----------------------------------------------------------------------------+
@@ -199,17 +199,15 @@ else:
 #--------------------------?
 
 # Secondary variable association -------------------------------------+
-file = open("hotdogs.txt", "r")                                       #
-                                                                      #
 v_hotdogs = filter_scraper(4, search_query, hotdog_data, hidden=True) #                                                           #
 total_v_hotdogs = 0                                                   #
 for i in v_hotdogs:                                                   #
-    total_v_hotdogs += float(i)                                       #
+    total_v_hotdogs += int(i)                                         #
                                                                       #
 m_hotdogs = filter_scraper(5, search_query, hotdog_data, hidden=True) #
 total_m_hotdogs = 0                                                   #
 for i in m_hotdogs:                                                   #
-    total_m_hotdogs += float(i)                                       #
+    total_m_hotdogs += int(i)                                         #
                                                                       #
 onions = filter_scraper(6, search_query, hotdog_data, hidden=True)    #
 total_onions = 0                                                      #
@@ -219,25 +217,25 @@ for i in onions:                                                      #
 ketchup = filter_scraper(7, search_query, hotdog_data, hidden=True)   #
 total_ketchup = 0                                                     #
 for i in ketchup:                                                     #
-    total_ketchup += float(i)                                         #
+    total_ketchup += int(i)                                           #
                                                                       #
 file.close()                                                          #
 #---------------------------------------------------------------------?
 
 # Analysis output ---------------------------------------------------+
 file = open("analysis.txt", "w")
-file.write("Analysis of hotdog data:\n")
+file.write("Analysis of hotdog data:\n\n")
 file.write(f"Vendor searched: {search_query}\n")
 file.write(f"Number of vegan hotdogs supplied: {total_v_hotdogs}\n")
 file.write(f"Number of meat hotdogs supplied: {total_m_hotdogs}\n")
 file.write(f"Total amount of onions supplied: {total_onions}\n")
 file.write(f"Total amount of ketchup supplied: {total_ketchup}\n")
 file.write(f"-------------------------------------------------------\n")
-file.write(f"Algorithm comparisons:\n")
+file.write(f"Algorithm comparisons:\n\n")
 file.write(f"Linear search found {search_input} in {len(items)} steps.\n")
 file.write(f"Binary search found {search_input} in {len(items) // 2} steps.\n")
 file.write(f"Bubble sort sorted {len(items)} items in {len(items) ** 2} steps.\n")
-file.write(f"Quick sort sorted {len(items)} items in {len(items) * math.log(len(items))} steps.\n")
+file.write(f"Quick sort sorted {len(items)} items in {round(len(items) * math.log(len(items)))} steps.")
 file.close()   
 #--------------------------------------------------------------------+
 

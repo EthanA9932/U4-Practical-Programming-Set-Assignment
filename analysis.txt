@@ -1,12 +1,14 @@
 Analysis of hotdog data:
+
 Vendor searched: Dolly Dogs
-Number of vegan hotdogs supplied: 480.0
-Number of meat hotdogs supplied: 0
-Total amount of onions supplied: 0
-Total amount of ketchup supplied: 0
+Number of vegan hotdogs supplied: 480
+Number of meat hotdogs supplied: 1150
+Total amount of onions supplied: 126.0
+Total amount of ketchup supplied: 17
 -------------------------------------------------------
 Algorithm comparisons:
+
 Linear search found 25.5 in 8 steps.
 Binary search found 25.5 in 4 steps.
 Bubble sort sorted 8 items in 64 steps.
-Quick sort sorted 8 items in 16.635532333438686 steps.
+Quick sort sorted 8 items in 17 steps.
