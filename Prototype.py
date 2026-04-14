@@ -14,7 +14,7 @@
 '''
 # The bottom of the python file has repository links. Show line numbers for easier locating.
 # +-----------------------------------------------------------------------------------+-----------+
-# | Milestones:                                                                       | Complete? |
+# |                                Primary Milestones:                                | Complete? |
 # +-----------------------------------------------------------------------------------+-----------+
 # | 0. Read the data from the text file.                                              |     Y     |
 # | 1. Linear search the data when it is sorted.                                      |     Y     |
@@ -27,6 +27,11 @@
 # | 8. Provide analysis for the user (most productive vendor, number of vegan hotdogs |     N     |
 # |    versus meat hotdogs supplied, vendor using the least amount of ketchup, etc.)  |           |
 # | 9. Save results of analysis to an output file.                                    |     N     |
+# +-----------------------------------------------------------------------------------+           |
+# |                               Secondary Milestones:                               |           |
+# +-----------------------------------------------------------------------------------+           |
+# | A. Allow the user to edit the variables within 'hotdogs.txt'.                     |     N     |
+# | B. ???                                                                            |     N     | these requirement rows are only for place holder purposes
 # +-----------------------------------------------------------------------------------+-----------+
 
 # Creating variables and setting up foundational information ----------------------------------------+
@@ -34,80 +39,83 @@ import math                                                                     
 print("Available vendors:\n 1. Dolly Dogs\n 2. Korner Kart")                                         #
 available_vendors = ['Dolly Dogs', 'Korner Kart']                                                    # List of available vendors
 search_query = str(input("\nPlease enter the name of the vendor you would like to search (2-25): ")) # >user inputs search query here
-hotdog_data = []                                                                                     # Creating placeholder list for 'hotdog.txt' 
-length_check = False                                                                                 #
-available_check = False                                                                              #
 #----------------------------------------------------------------------------------------------------+
 
-# Looping validations for 'search_query' ---------------------------------------------------+ [D]
-while length_check != True or available_check != True:                                      #
-    # Length Validaton -------------------------------------+                               #
-    if len(search_query) >= 2 and len(search_query) <= 25:  #                               # "If the length of the search is between the inclusive range of 2 to 25...
-        length_check = True                                 #                               # "...the length check becomes true."
-        # Presence Check ----+                              #                               #
-    elif search_query == "": #                              #                               #
-        length_check = False #                              #                               #
-        #--------------------+                              #                               #
-    else:                                                   #                               #
-        length_check = False                                #                               #
-    #-------------------------------------------------------+                               #
-    # Lookup Validation -------------------------+                                          #
-    if search_query in available_vendors:        #                                          #
-        available_check = True                   #                                          #
-    #--------------------------------------------#                                          #
-    if length_check != True or available_check != True:                                     #
-        search_query = str(input("Vendor not found, or name out of length range (2-25): ")) #
+# Looping validations for 'search_query' ---------------------------------------------------+[D]
+length_check = False                                                                        #
+available_check = False                                                                     #
+while length_check != True or available_check != True:                                      # "While either of these variables are False, run this piece of code until they are both True."
+    # Length Validaton ------------------------------------+                                #
+    if len(search_query) >= 2 and len(search_query) <= 25: #                                # "If the length of the search query is between the inclusive range of 2 to 25...
+        length_check = True                                #                                #  "...the length check becomes True."
+        # Presence Check ----+                             #                                #
+    elif search_query == "": #                             #                                # "Alternatively, if nothing is inputted..."
+        length_check = False #                             #                                #  "...the length check stays False."
+        #--------------------+                             #                                #
+    else:                                                  #                                # "If all above statements are false..."
+        length_check = False                               #                                #  "...the length check is too."
+    #------------------------------------------------------+                                #
+    # Lookup Validation ------------------+                                                 #
+    if search_query in available_vendors: #                                                 # "If the search query is found in our available vendors list..."
+        available_check = True            #                                                 #  "...the avialbile check becomes True."
+    #-------------------------------------#                                                 #
+    if length_check != True or available_check != True:                                     # "If, after all the validations, either check is still false..."
+        search_query = str(input("Vendor not found, or name out of length range (2-25): ")) #  "...tell the user to input the query again with an error message."
 #-------------------------------------------------------------------------------------------#
 
 # Array handling -----------------------+
+hotdog_data = []                        #
 file = open("hotdogs.txt", "r")         #
-for line in file:  #[A]                 #
-    if line.find(search_query) != -1:   #
-        parts = line.strip().split(",") #
-        hotdog_data.append(parts)       #
-    else:                               #
-        continue                        #
-#---------------------------------------#
+for line in file:                       #[A]
+    if line.find(search_query) != -1:   # If the search query (case sensitive) is not found in the line...
+        parts = line.strip().split(",") #  ...strip the line from its commas...
+        hotdog_data.append(parts)       #  ...and append it to 'hotdog_data'
+    else:                               # If the search query is not found in the line...
+        continue                        #  ...skip to the next line in the file.
+#---------------------------------------#   This may seem incorrect, but due to the query being forced to be EXACTLY how it's presented to the user (e.g. 'Dolly Dog's)...
+                                        #   ...the code can't be given an incorrect vendor name that doesn't exist.
 
-# Defining search algorithms -----------------------+ 
-def linear_search(items, target):                   # [E] LINEAR SEARCH
-    index = 0                                       #
-    found = False                                   #
-                                                    #
-    while found == False and index < len(items):    #
-        if target == items[index]:                  #
-            found = True                            #
-        else:                                       #
-            index += 1                              #
-                                                    #
-    if found == False:                              #
-        print(f"{target} not found.")               #
-    print(f"Found {target} after {index} step(s).") #
-                                                    #
-def binary_search(items, target):                   # [F] BINARY SEARCH:
-    found = False                                   # 
-    first = 0                                       #
-    last = len(items) - 1                           #
-    midpoint = 0                                    #
-    steps = 0                                       #
-                                                    #
-    while first <= last and found == False:         #
-        midpoint = (first + last) / 2               #
-        if type(midpoint) == float:                 #
-            midpoint += 0.5                         #
-            midpoint = int(midpoint)                #
-        if items[midpoint] == target:               #
-            found = True                            #
-        elif items[midpoint] < target:              #
-            first = midpoint + 1                    #
-        else:                                       #
-            last = midpoint - 1                     #
-        steps += 1                                  #
-    print(f"Found {target} after {steps} step(s).") #
-#---------------------------------------------------+
+# Defining search algorithms ---------------------------+ 
+def linear_search(items, target, hidden):               #[E] LINEAR SEARCH
+    index = 0                                           #
+    found = False                                       #
+                                                        #
+    while found == False and index < len(items):        #
+        if target == items[index]:                      #
+            found = True                                #
+        else:                                           #
+            index += 1                                  #
+                                                        #
+    if found == False:                                  #
+        print(f"{target} not found.")                   #
+    if hidden != True:                                  #
+        print(f"Found {target} after {index} step(s).") #
+                                                        #
+def binary_search(items, target, hidden):               #[F] BINARY SEARCH:
+    found = False                                       # 
+    first = 0                                           #
+    last = len(items) - 1                               #
+    midpoint = 0                                        #
+    steps = 0                                           #
+                                                        #
+    while first <= last and found == False:             #
+        midpoint = (first + last) / 2                   #
+        if type(midpoint) == float:                     #
+            midpoint += 0.5                             #
+            midpoint = int(midpoint)                    #
+        if items[midpoint] == target:                   #
+            found = True                                #
+        elif items[midpoint] < target:                  #
+            first = midpoint + 1                        #
+        else:                                           #
+            last = midpoint - 1                         #
+        steps += 1                                      #
+    if hidden != True:                                  #
+        print(f"Found {target} after {index} step(s).") #
+#-------------------------------------------------------+
 
 # Defining sort algorithms -------------------------------------+
-def bubble_sort(items):                                         # BUBBLE SORT:
+def bubble_sort(items, hidden):                                 # BUBBLE SORT:
     swaps = 0                                                   #
     n = len(items)                                              #
     for i in range(n):                                          #
@@ -115,10 +123,11 @@ def bubble_sort(items):                                         # BUBBLE SORT:
             if items[j] > items[j + 1]:                         #
                 items[j], items[j + 1] = items[j + 1], items[j] #
                 swaps += 1                                      #
-    print(f"Sorted after {swaps} swap(s).")                     #
+    if hidden != True:                                          #
+        print(f"Sorted after {swaps} swap(s).")                 #
     return items                                                #
                                                                 #
-def quick_sort(items):                                          # QUICK SORT:
+def quick_sort(items, hidden):                                  # QUICK SORT:
     swaps = 0                                                   #
     if len(items) <= 1:                                         #
         return items                                            #
@@ -129,74 +138,76 @@ def quick_sort(items):                                          # QUICK SORT:
     swaps += len(middle)                                        #
     right = [x for x in items if x > pivot]                     #
     swaps += len(right)                                         #
-    print(f"Sorted after {swaps} swap(s).")                     #
+    if hidden != True:                                          #
+        print(f"Sorted after {swaps} swap(s).")                 #
     return quick_sort(left) + middle + quick_sort(right)        #
 #---------------------------------------------------------------+ 
 
-# User-inputted category search ----------------------|
-query_check = False                                   #
-print("\nAvailable categories:\n 1. vendor_id\n 2. vendor_name\n 3. year_week\n 4. vegan_hotdogs\n 5. meat_hotdogs\n 6. onions\n 7. ketchup\n")
-while query_check != True:                            #
-    try:                                              #
-        user_search = int(input("What category would you like to search the data in? (Enter a number from 1 to 7): "))   #
-        for i in [0, len(hotdog_data)]:               #
-            while user_search < 1 or user_search > 7: #
-                user_search = int(input("Category not found, ensure input is within range: "))
-        if user_search > 1 or user_search < 7:        #
-           query_check = True                         #
-    except ValueError:                                #
-        print("Input is not an integer.")             #
-#-----------------------------------------------------|
+# User-inputted category search ----------------------------------------------------------------------------------------------------------------+
+query_check = False                                                                                                                             # Initial boolean assignment
+print("\nAvailable categories:\n 1. vendor_id\n 2. vendor_name\n 3. year_week\n 4. vegan_hotdogs\n 5. meat_hotdogs\n 6. onions\n 7. ketchup\n") #
+while query_check != True:                                                                                                                      # While loop begun
+    try:                                                                                                                                        # Try command used to prevent errors
+        user_search = int(input("What category would you like to search the data in? (Enter a number from 1 to 7): "))                          # Ask user to input an INTEGER from 1 to 7, inclusive
+        for i in [0, len(hotdog_data)]:                                                                                                         #
+            while user_search < 1 or user_search > 7:                                                                                           #
+                user_search = int(input("Category not found, ensure input is within range: "))                                                  #
+        if user_search > 1 or user_search < 7:                                                                                                  #
+           query_check = True                                                                                                                   #
+    except ValueError:                                                                                                                          # Except error called to stop code crash
+        print("Input is not an integer.")                                                                                                       #
+#-----------------------------------------------------------------------------------------------------------------------------------------------+
 
-# Filtering data ---------------------------------------------|
-def filter_scraper(target_filter, vendor_name, data, hidden): #
-    file = open("hotdogs.txt", "r")                           #
-    items = []                                                #
-    i = 0                                                     #
-    for line in file:                                         #
-        i += 1                                                #
-        segment = []                                          #
-        line = line.strip().split(",")                        #
-        if vendor_name in line:                               #
-            segment = line[target_filter-1]                   #
-            items.append(segment)                             #
-    if not hidden:                                            #
-        print(f"{target_filter} for {vendor_name}: {items}")  #
-    return items                                              #
-    file.close()                                              #
-                                                              #
-items = filter_scraper(user_search, search_query, hotdog_data, hidden=False)
-#-------------------------------------------------------------|
+# Filtering data ------------------------------------------------------------+
+def filter_scraper(target_filter, vendor_name, data, hidden):                #
+    file = open("hotdogs.txt", "r")                                          #
+    items = []                                                               #
+    i = 0                                                                    #
+    for line in file:                                                        #
+        i += 1                                                               #
+        segment = []                                                         #
+        line = line.strip().split(",")                                       #
+        if vendor_name in line:                                              #
+            segment = line[target_filter-1]                                  #
+            items.append(segment)                                            #
+    if not hidden:                                                           #
+        print(f"{target_filter} for {vendor_name}: {items}")                 #
+    return items                                                             #
+    file.close()                                                             #
+                                                                             #
+items = filter_scraper(user_search, search_query, hotdog_data, hidden=False) #
+#----------------------------------------------------------------------------+
 
-# Sorting if wanted =--------------------------|
-sort_input = str(input("\nWould you like to sort the data before searching? (Y/N): "))
-sort_options = ["Bubble Sort", "Quick Sort"]   #
-while sort_input != "Y" and sort_input != "N": #
-    sort_input = str(input("Invalid input, please enter Y or N: "))
-if sort_input == "Y":                          #
-    sort_choice = str(input(f"Which sorting algorithm would you like to use? ({sort_options[0]}/{sort_options[1]}): "))
-    while sort_choice not in sort_options:     #
-        sort_choice = str(input("Invalid input, please enter a valid sorting algorithm: "))
-    if sort_choice == sort_options[0]:         #
-        items = bubble_sort(items)             #
-    else:                                      #
-        items = quick_sort(items)              #
-#----------------------------------------------|
+# Sorting if wanted ----------------------------------------------------------------------------------------------------+
+sort_input = str(input("\nWould you like to sort the data before searching? (Y/N): "))                                  #
+sort_options = ["Bubble Sort", "Quick Sort"]                                                                            #
+while sort_input != "Y" and sort_input != "N":                                                                          #
+    sort_input = str(input("Invalid input, please enter Y or N: "))                                                     #
+if sort_input == "Y":                                                                                                   #
+    sort_choice = str(input(f"Which sorting algorithm would you like to use? ({sort_options[0]}/{sort_options[1]}): ")) #
+    while sort_choice not in sort_options:                                                                              #
+        sort_choice = str(input("Invalid input, please enter a valid sorting algorithm: "))                             #
+    if sort_choice == sort_options[0]:                                                                                  #
+        items = bubble_sort(items, hidden=False)                                                                        #
+    else:                                                                                                               #
+        items = quick_sort(items, hidden=False)                                                                         #
+#-----------------------------------------------------------------------------------------------------------------------+
 
-# Searching -------------------------------|
-search_input = str(input("What is your search query?: "))
-while search_input not in items:           #
-    search_input = str(input("Query not found, please enter a valid query: "))
-                                           #
-search_options = ["Linear Search", "Binary Search"]
-search_choice = str(input(f"Which searching algorithm would you like to use? ({search_options[0]}/{search_options[1]}): "))
-while search_choice not in search_options: #
-    search_choice = str(input("Invalid input, please enter a valid searching algorithm: "))
-if search_choice == search_options[0]:     #
-    linear_search(items, search_input)     #
-else:                                      #
-    binary_search(items, search_input)     #
-#------------------------------------------|
+# Searching ----------------------------------------------------------------------------------------------------------------+
+search_input = str(input("What is your search query?: "))                                                                   #
+while search_input not in items:                                                                                            #
+    search_input = str(input("Query not found, please enter a valid query: "))                                              #
+                                                                                                                            #
+search_options = ["Linear Search", "Binary Search"]                                                                         #
+search_choice = str(input(f"Which searching algorithm would you like to use? ({search_options[0]}/{search_options[1]}): ")) #
+while search_choice not in search_options:                                                                                  #
+    search_choice = str(input("Invalid input, please enter a valid searching algorithm: "))                                 #
+if search_choice == search_options[0]:                                                                                      #
+    linear_search(items, search_input, hidden=False)                                                                        #
+else:                                                                                                                       #
+    print("WARNING: Binary Search requires sorting before it is used.")                                                     #
+    binary_search(items, search_input, hidden=False)                                                                        #
+#---------------------------------------------------------------------------------------------------------------------------+
 
 # Secondary variable association -------------------------------------+
 v_hotdogs = filter_scraper(4, search_query, hotdog_data, hidden=True) #
@@ -221,6 +232,11 @@ for i in ketchup:                                                     #
                                                                       #
 file.close()                                                          #
 #---------------------------------------------------------------------+
+
+# Background Algorithms hidden from user --------------------------------------------------?
+items = filter_scraper(user_search, search_query, hotdog_data, hidden=True)
+
+#------------------------------------------------------------------------------------------?
 
 # Analysis output! ======================================================================================+
 file = open("analysis.txt", "w")                                                                         #
