@@ -8,7 +8,7 @@ Total amount of ketchup supplied: 17
 -------------------------------------------------------
 Algorithm comparisons:
 
-Linear search found 25.5 in 8 steps.
-Binary search found 25.5 in 4 steps.
-Bubble sort sorted 8 items in 64 steps.
-Quick sort sorted 8 items in 17 steps.
+Linear search found 25.5 in 4 steps.
+Binary search found 25.5 in 1 steps.
+Bubble sort sorted 8 items in 11 steps.
+Quick sort sorted 8 items in 8 steps.

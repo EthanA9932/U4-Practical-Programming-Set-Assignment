@@ -22,11 +22,11 @@
 # | 3. Search the data using a binary search.                                         |     Y     |
 # | 4. Sort the data using a bubble sort.                                             |     Y     |
 # | 5. Sort the data using a quick sort.                                              |     Y     |
-# | 6. Compare the efficiency (execution time) of the different searches.             |     N     |
-# | 7. Compare the efficiency (execution time) of the different sorts.                |     N     |
-# | 8. Provide analysis for the user (most productive vendor, number of vegan hotdogs |     N     |
+# | 6. Compare the efficiency (execution time) of the different searches.             |     Y     |
+# | 7. Compare the efficiency (execution time) of the different sorts.                |     Y     |
+# | 8. Provide analysis for the user (most productive vendor, number of vegan hotdogs |     Y     |
 # |    versus meat hotdogs supplied, vendor using the least amount of ketchup, etc.)  |           |
-# | 9. Save results of analysis to an output file.                                    |     N     |
+# | 9. Save results of analysis to an output file.                                    |     Y     |
 # +-----------------------------------------------------------------------------------+           |
 # |                               Secondary Milestones:                               |           |
 # +-----------------------------------------------------------------------------------+           |
@@ -35,7 +35,6 @@
 # +-----------------------------------------------------------------------------------+-----------+
 
 # Creating variables and setting up foundational information ----------------------------------------+
-import math                                                                                          #
 print("Available vendors:\n 1. Dolly Dogs\n 2. Korner Kart")                                         #
 available_vendors = ['Dolly Dogs', 'Korner Kart']                                                    # List of available vendors
 search_query = str(input("\nPlease enter the name of the vendor you would like to search (2-25): ")) # >user inputs search query here
@@ -67,7 +66,7 @@ while length_check != True or available_check != True:                          
 hotdog_data = []                        #
 file = open("hotdogs.txt", "r")         #
 for line in file:                       #[A]
-    if line.find(search_query) != -1:   # If the search query (case sensitive) is not found in the line...
+    if line.find(search_query) != -1:   # If the search query (case sensitive) isfound in the line...
         parts = line.strip().split(",") #  ...strip the line from its commas...
         hotdog_data.append(parts)       #  ...and append it to 'hotdog_data'
     else:                               # If the search query is not found in the line...
@@ -90,6 +89,7 @@ def linear_search(items, target, hidden):               #[E] LINEAR SEARCH
         print(f"{target} not found.")                   #
     if hidden != True:                                  #
         print(f"Found {target} after {index} step(s).") #
+    return index                                        #
                                                         #
 def binary_search(items, target, hidden):               #[F] BINARY SEARCH:
     found = False                                       # 
@@ -111,11 +111,12 @@ def binary_search(items, target, hidden):               #[F] BINARY SEARCH:
             last = midpoint - 1                         #
         steps += 1                                      #
     if hidden != True:                                  #
-        print(f"Found {target} after {index} step(s).") #
+        print(f"Found {target} after {steps} step(s).") #
+    return steps                                        #
 #-------------------------------------------------------+
 
 # Defining sort algorithms -------------------------------------+
-def bubble_sort(items, hidden):                                 # BUBBLE SORT:
+def bubble_sort(items, hidden, request):                        # BUBBLE SORT:
     swaps = 0                                                   #
     n = len(items)                                              #
     for i in range(n):                                          #
@@ -125,9 +126,12 @@ def bubble_sort(items, hidden):                                 # BUBBLE SORT:
                 swaps += 1                                      #
     if hidden != True:                                          #
         print(f"Sorted after {swaps} swap(s).")                 #
-    return items                                                #
+    if request == "swaps":                                      #
+        return swaps                                            #
+    else:                                                       #
+        return items                                            #
                                                                 #
-def quick_sort(items, hidden):                                  # QUICK SORT:
+def quick_sort(items, hidden, request):                         # QUICK SORT:
     swaps = 0                                                   #
     if len(items) <= 1:                                         #
         return items                                            #
@@ -140,7 +144,10 @@ def quick_sort(items, hidden):                                  # QUICK SORT:
     swaps += len(right)                                         #
     if hidden != True:                                          #
         print(f"Sorted after {swaps} swap(s).")                 #
-    return quick_sort(left) + middle + quick_sort(right)        #
+    if request == "swaps":                                      #
+        return swaps                                            #
+    else:                                                       #
+        return left + middle + right                            #
 #---------------------------------------------------------------+ 
 
 # User-inputted category search ----------------------------------------------------------------------------------------------------------------+
@@ -188,9 +195,9 @@ if sort_input == "Y":                                                           
     while sort_choice not in sort_options:                                                                              #
         sort_choice = str(input("Invalid input, please enter a valid sorting algorithm: "))                             #
     if sort_choice == sort_options[0]:                                                                                  #
-        items = bubble_sort(items, hidden=False)                                                                        #
+        items = bubble_sort(items, hidden=False, request="items")                                                                        #
     else:                                                                                                               #
-        items = quick_sort(items, hidden=False)                                                                         #
+        items = quick_sort(items, hidden=False, request="items")                                                                         #
 #-----------------------------------------------------------------------------------------------------------------------+
 
 # Searching ----------------------------------------------------------------------------------------------------------------+
@@ -233,25 +240,30 @@ for i in ketchup:                                                     #
 file.close()                                                          #
 #---------------------------------------------------------------------+
 
-# Background Algorithms hidden from user --------------------------------------------------?
-items = filter_scraper(user_search, search_query, hotdog_data, hidden=True)
-
-#------------------------------------------------------------------------------------------?
+# Background algorithms hidden from user -----------------------------------+
+items = filter_scraper(user_search, search_query, hotdog_data, hidden=True) #
+                                                                            #
+linear_steps = linear_search(items, search_input, hidden=True)              #
+binary_steps = binary_search(items, search_input, hidden=True)              #
+bubble_swaps = bubble_sort(items, hidden=True, request="swaps")             #
+quick_swaps = quick_sort(items, hidden=True, request="swaps")               #
+#---------------------------------------------------------------------------+
 
 # Analysis output! ======================================================================================+
 file = open("analysis.txt", "w")                                                                         #
 file.write("Analysis of hotdog data:\n\n")                                                               #
-file.write(f"Vendor searched: {search_query}\n")                                                         #
-file.write(f"Number of vegan hotdogs supplied: {total_v_hotdogs}\n")                                     # These four
-file.write(f"Number of meat hotdogs supplied: {total_m_hotdogs}\n")                                      # lines are
-file.write(f"Total amount of onions supplied: {total_onions}\n")                                         # from the 
-file.write(f"Total amount of ketchup supplied: {total_ketchup}\n")                                       # previous section
+file.write(f"Vendor searched: {search_query}\n")                                                         # This line is from the search query of the user.
+                                                                                                         #
+file.write(f"Number of vegan hotdogs supplied: {total_v_hotdogs}\n")                                     # These four lines are
+file.write(f"Number of meat hotdogs supplied: {total_m_hotdogs}\n")                                      # from the variable
+file.write(f"Total amount of onions supplied: {total_onions}\n")                                         # association section, where
+file.write(f"Total amount of ketchup supplied: {total_ketchup}\n")                                       # the data is totalled up.
 file.write(f"-------------------------------------------------------\n")                                 #
 file.write(f"Algorithm comparisons:\n\n")                                                                #
-file.write(f"Linear search found {search_input} in {len(items)} steps.\n")                               # These four
-file.write(f"Binary search found {search_input} in {len(items) // 2} steps.\n")                          # lines are
-file.write(f"Bubble sort sorted {len(items)} items in {len(items) ** 2} steps.\n")                       # from the
-file.write(f"Quick sort sorted {len(items)} items in {round(len(items) * math.log(len(items)))} steps.") # 'items' length
+file.write(f"Linear search found {search_input} in {linear_steps} steps.\n")                             # These four lines are from the
+file.write(f"Binary search found {search_input} in {binary_steps} steps.\n")                             # previous section with the
+file.write(f"Bubble sort sorted {len(items)} items in {bubble_swaps} steps.\n")                          # hidden algorithms simulating
+file.write(f"Quick sort sorted {len(items)} items in {quick_swaps} steps.")                              # the algorithms
 file.close()                                                                                             #
 #========================================================================================================+
 
@@ -284,8 +296,8 @@ file.close()                                                                    
 # | Line | Diary                                                                              |
 # +------+------------------------------------------------------------------------------------+
 # |   36 | 1. This doesn't skim the file for every vendor name and format it into Title Case. |
-# |  1?? | 2. I feel like there is a much simpler way to extract a variable from an array.    |
+# |   65 | 2. I will have to edit this to somehow allow edits whilst being able to revert the |
+# |      |    file back to its original state for the next user.                              |
 # |  ??? | 3. ???                                                                             |
 # |  ??? | 4. ???                                                                             |
-# |  ??? | 5. ???                                                                             |
 # +-------------------------------------------------------------------------------------------+
