@@ -31,14 +31,20 @@
 # |                               Secondary Milestones:                               |           |
 # +-----------------------------------------------------------------------------------+           |
 # | A. Allow the user to edit the variables within 'hotdogs.txt'.                     |     N     |
-# | B. ???                                                                            |     N     | these requirement rows are only for place holder purposes
+# | B. Allow the user to revert the hotdogs.txt file to its previous state.           |     N     |
+# | C. Allow the user to reset the hotdogs.txt file to its initial state.             |     N     |
+# | D. ???                                                                            |     N     | this requirement row is only for place holder purposes
 # +-----------------------------------------------------------------------------------+-----------+
 
-# Creating variables and setting up foundational information ----------------------------------------+
-print("Available vendors:\n 1. Dolly Dogs\n 2. Korner Kart")                                         #
-available_vendors = ['Dolly Dogs', 'Korner Kart']                                                    # List of available vendors
-search_query = str(input("\nPlease enter the name of the vendor you would like to search (2-25): ")) # >user inputs search query here
-#----------------------------------------------------------------------------------------------------+
+# Creating variables and setting up foundational information ---------------------------------------------------------------+
+print("Available vendors:\n 1. Dolly Dogs\n 2. Korner Kart")                                                                #
+available_vendors = ['Dolly Dogs', 'Korner Kart']                                                                           # List of available vendors
+search_query = str(input("\nPlease enter the name of the vendor you would like to search (2-25, or type ADMIN to edit): ")) # >user inputs search query here
+#---------------------------------------------------------------------------------------------------------------------------+
+
+# Variable editing --------------------------?
+if search_query == "ADMIN":
+#--------------------------------------------?
 
 # Looping validations for 'search_query' ---------------------------------------------------+[D]
 length_check = False                                                                        #
@@ -73,6 +79,48 @@ for line in file:                       #[A]
         continue                        #  ...skip to the next line in the file.
 #---------------------------------------#   This may seem incorrect, but due to the query being forced to be EXACTLY how it's presented to the user (e.g. 'Dolly Dog's)...
                                         #   ...the code can't be given an incorrect vendor name that doesn't exist.
+
+# Variable checking -------------------------------------------------------------------------------------------------------------------------------------------------------------#
+for i in hotdog_data:                                                                                                                                                            #
+    if i[0] ==:                                                                                                                                                                  #
+        id_check = True                                                                                                                                                          #
+    else:                                                                                                                                                                        #
+        id_check = False                                                                                                                                                         #
+                                                                                                                                                                                 #
+    if len(i[1]) <= 2 and len(i[1]) >= 25:                                                                                                                                       #
+        name_check = True                                                                                                                                                        #
+    else:                                                                                                                                                                        #
+        name_check = False                                                                                                                                                       #
+                                                                                                                                                                                 #
+    if isinstance(i[2], int) == True and :                                                                                                                                       #
+        year_week_check = True                                                                                                                                                   #
+    else:                                                                                                                                                                        #
+        year_week_check = False                                                                                                                                                  #
+                                                                                                                                                                                 #
+    if isinstance(i[3], int) == True and :                                                                                                                                       #
+        v_hotdog_check = True                                                                                                                                                    #
+    else:                                                                                                                                                                        #
+        v_hotdog_check = False                                                                                                                                                   #
+                                                                                                                                                                                 #
+    if isinstance(i[4], int) == True and :                                                                                                                                       #
+        m_hotdog_check = True                                                                                                                                                    #
+    else:                                                                                                                                                                        #
+        m_hotdog_check = False                                                                                                                                                   #
+                                                                                                                                                                                 #
+    if isinstance(i[5], float) == True and :                                                                                                                                     #
+        onion_check = True                                                                                                                                                       #
+    else:                                                                                                                                                                        #
+        onion_check = False                                                                                                                                                      #
+                                                                                                                                                                                 #
+    if isinstance(i[6], int) == True and i[6] <= 1 and i[6] <= 4:                                                                                                                #
+        ketchup_check = True                                                                                                                                                     #
+    else:                                                                                                                                                                        #
+        ketchup_check = False                                                                                                                                                    #
+                                                                                                                                                                                 #
+if id_check == False or name_check == False or year_week_check == False or v_hotdog_check == False or m_hotdog_check == False or onion_check == False or ketchup_check == False: #
+    print("Error detected within one or more variables inside hotdogs.txt. Please undo the change or reset the data after running this code again.")                             #
+    exit()                                                                                                                                                                       #
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 # Defining search algorithms ---------------------------+ 
 def linear_search(items, target, hidden):               #[E] LINEAR SEARCH
@@ -157,7 +205,7 @@ while query_check != True:                                                      
     try:                                                                                                                                        # Try command used to prevent errors
         user_search = int(input("What category would you like to search the data in? (Enter a number from 1 to 7): "))                          # Ask user to input an INTEGER from 1 to 7, inclusive
         for i in [0, len(hotdog_data)]:                                                                                                         #
-            while user_search < 1 or user_search > 7:                                                                                           #
+            while user_search < 1 or user_search > 7 or user_search == "":                                                                      #
                 user_search = int(input("Category not found, ensure input is within range: "))                                                  #
         if user_search > 1 or user_search < 7:                                                                                                  #
            query_check = True                                                                                                                   #
@@ -188,31 +236,31 @@ items = filter_scraper(user_search, search_query, hotdog_data, hidden=False) #
 # Sorting if wanted ----------------------------------------------------------------------------------------------------+
 sort_input = str(input("\nWould you like to sort the data before searching? (Y/N): "))                                  #
 sort_options = ["Bubble Sort", "Quick Sort"]                                                                            #
-while sort_input != "Y" and sort_input != "N":                                                                          #
+while sort_input != "Y" and sort_input != "N" or sort_input == "":                                                      #
     sort_input = str(input("Invalid input, please enter Y or N: "))                                                     #
 if sort_input == "Y":                                                                                                   #
     sort_choice = str(input(f"Which sorting algorithm would you like to use? ({sort_options[0]}/{sort_options[1]}): ")) #
-    while sort_choice not in sort_options:                                                                              #
+    while sort_choice not in sort_options or sort_choice == "":                                                         #
         sort_choice = str(input("Invalid input, please enter a valid sorting algorithm: "))                             #
     if sort_choice == sort_options[0]:                                                                                  #
-        items = bubble_sort(items, hidden=False, request="items")                                                                        #
+        items = bubble_sort(items, hidden=False, request="items")                                                       #
     else:                                                                                                               #
-        items = quick_sort(items, hidden=False, request="items")                                                                         #
+        items = quick_sort(items, hidden=False, request="items")                                                        #
 #-----------------------------------------------------------------------------------------------------------------------+
 
 # Searching ----------------------------------------------------------------------------------------------------------------+
 search_input = str(input("What is your search query?: "))                                                                   #
-while search_input not in items:                                                                                            #
+while search_input not in items or search_input == "":                                                                      #
     search_input = str(input("Query not found, please enter a valid query: "))                                              #
                                                                                                                             #
 search_options = ["Linear Search", "Binary Search"]                                                                         #
 search_choice = str(input(f"Which searching algorithm would you like to use? ({search_options[0]}/{search_options[1]}): ")) #
-while search_choice not in search_options:                                                                                  #
+while search_choice not in search_options or search_choice == "":                                                           #
     search_choice = str(input("Invalid input, please enter a valid searching algorithm: "))                                 #
 if search_choice == search_options[0]:                                                                                      #
     linear_search(items, search_input, hidden=False)                                                                        #
 else:                                                                                                                       #
-    print("WARNING: Binary Search requires sorting before it is used.")                                                     #
+    print("WARNING: Binary Search requires sorting before it is used.")                                                     # This warning is put in place because binary sort requires a sorted list.
     binary_search(items, search_input, hidden=False)                                                                        #
 #---------------------------------------------------------------------------------------------------------------------------+
 
@@ -296,8 +344,8 @@ file.close()                                                                    
 # | Line | Diary                                                                              |
 # +------+------------------------------------------------------------------------------------+
 # |   36 | 1. This doesn't skim the file for every vendor name and format it into Title Case. |
-# |   65 | 2. I will have to edit this to somehow allow edits whilst being able to revert the |
+# |   65 | 2. I may need to edit this to somehow allow edits whilst being able to revert the  |
 # |      |    file back to its original state for the next user.                              |
-# |  ??? | 3. ???                                                                             |
+# |   83 | 3. This certainly isn't the best way of formatting this.                           |
 # |  ??? | 4. ???                                                                             |
 # +-------------------------------------------------------------------------------------------+
