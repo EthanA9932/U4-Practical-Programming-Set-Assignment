@@ -42,10 +42,6 @@ available_vendors = ['Dolly Dogs', 'Korner Kart']                               
 search_query = str(input("\nPlease enter the name of the vendor you would like to search (2-25, or type ADMIN to edit): ")) # >user inputs search query here
 #---------------------------------------------------------------------------------------------------------------------------+
 
-# Variable editing --------------------------?
-if search_query == "ADMIN":
-#--------------------------------------------?
-
 # Looping validations for 'search_query' ---------------------------------------------------+[D]
 length_check = False                                                                        #
 available_check = False                                                                     #
@@ -66,8 +62,27 @@ while length_check != True or available_check != True:                          
     #-------------------------------------#                                                 #
     if length_check != True or available_check != True:                                     # "If, after all the validations, either check is still false..."
         search_query = str(input("Vendor not found, or name out of length range (2-25): ")) #  "...tell the user to input the query again with an error message."
+    if search_query == "ADMIN": #                                                           # "If the user inputs 'ADMIN' as the search query..."
+        print("Admin mode activated:") #                                                    #  "...tell the user that admin mode is activated..."
+        break                                                                               #  "...and break out of the while loop early."
 #-------------------------------------------------------------------------------------------#
-
+'''
+# Admin editing -----------------------------------------------------------------------------------------------------------------------+
+if search_query == "ADMIN":                                                                                                            #
+    print("\nAdmin options:\n 1. Edit a variable\n 2. Revert the file to its previous state\n 3. Reset the file to its initial state") # Admin options shown to user
+    admin_choice = str(input("Please enter the number of the admin option you would like to use: "))                                   # User inputs admin choice here
+    while admin_choice not in ["1", "2", "3"] or admin_choice == "":                                                                   # Looping validation for admin choice
+        admin_choice = str(input("Invalid input, please enter a valid admin option: "))                                                #
+    if admin_choice == "1":
+        # Implement EDIT code here
+    elif admin_choice == "2":
+        # Implement REVERT code here
+    else:
+        # Implement RESET code here
+    print("Admin choice executed, please run the code again to check the functionality of the data.")                                  # Message to user after admin choice is executed
+    exit()                                                                                                                             # Exit the code after admin choice is made, as the user needs to edit
+#--------------------------------------------------------------------------------------------------------------------------------------+
+'''
 # Array handling -----------------------+
 hotdog_data = []                        #
 file = open("hotdogs.txt", "r")         #
@@ -79,49 +94,52 @@ for line in file:                       #[A]
         continue                        #  ...skip to the next line in the file.
 #---------------------------------------#   This may seem incorrect, but due to the query being forced to be EXACTLY how it's presented to the user (e.g. 'Dolly Dog's)...
                                         #   ...the code can't be given an incorrect vendor name that doesn't exist.
-
-# Variable checking -------------------------------------------------------------------------------------------------------------------------------------------------------------#
-for i in hotdog_data:                                                                                                                                                            #
-    if i[0] ==:                                                                                                                                                                  #
-        id_check = True                                                                                                                                                          #
-    else:                                                                                                                                                                        #
-        id_check = False                                                                                                                                                         #
-                                                                                                                                                                                 #
-    if len(i[1]) <= 2 and len(i[1]) >= 25:                                                                                                                                       #
-        name_check = True                                                                                                                                                        #
-    else:                                                                                                                                                                        #
-        name_check = False                                                                                                                                                       #
-                                                                                                                                                                                 #
-    if isinstance(i[2], int) == True and :                                                                                                                                       #
-        year_week_check = True                                                                                                                                                   #
-    else:                                                                                                                                                                        #
-        year_week_check = False                                                                                                                                                  #
-                                                                                                                                                                                 #
-    if isinstance(i[3], int) == True and :                                                                                                                                       #
-        v_hotdog_check = True                                                                                                                                                    #
-    else:                                                                                                                                                                        #
-        v_hotdog_check = False                                                                                                                                                   #
-                                                                                                                                                                                 #
-    if isinstance(i[4], int) == True and :                                                                                                                                       #
-        m_hotdog_check = True                                                                                                                                                    #
-    else:                                                                                                                                                                        #
-        m_hotdog_check = False                                                                                                                                                   #
-                                                                                                                                                                                 #
-    if isinstance(i[5], float) == True and :                                                                                                                                     #
-        onion_check = True                                                                                                                                                       #
-    else:                                                                                                                                                                        #
-        onion_check = False                                                                                                                                                      #
-                                                                                                                                                                                 #
-    if isinstance(i[6], int) == True and i[6] <= 1 and i[6] <= 4:                                                                                                                #
-        ketchup_check = True                                                                                                                                                     #
-    else:                                                                                                                                                                        #
-        ketchup_check = False                                                                                                                                                    #
-                                                                                                                                                                                 #
-if id_check == False or name_check == False or year_week_check == False or v_hotdog_check == False or m_hotdog_check == False or onion_check == False or ketchup_check == False: #
-    print("Error detected within one or more variables inside hotdogs.txt. Please undo the change or reset the data after running this code again.")                             #
-    exit()                                                                                                                                                                       #
-#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-
+'''
+# Variable checking ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
+for i in hotdog_data:                                                                                                                                                                                                                                             #
+    if search_query in i[1] != -1:                                                                                                                                                                                                                                #
+        print(i)
+        if len(i[0]) == 6 and i[0][0].isupper() == True and i[0][1].isupper() == True and i[0][2] == "_" and i[0][3].isdigit() == True and i[0][4].isdigit() == True and i[0][5].isdigit() == True:                                                               #
+            id_check = True                                                                                                                                                                                                                                       #
+        else:                                                                                                                                                                                                                                                     #
+            id_check = False                                                                                                                                                                                                                                      #
+                                                                                                                                                                                                                                                                  #
+        if len(i[1]) >= 2 and len(i[1]) <= 25:                                                                                                                                                                                                                    #
+            name_check = True                                                                                                                                                                                                                                     #
+        else:                                                                                                                                                                                                                                                     #
+            name_check = False                                                                                                                                                                                                                                    #
+                                                                                                                                                                                                                                                                  #
+        if len(i[2]) == 6 and i[2].isdigit() and 2000 <= int(i[2][:4]) <= 2026 and 1 <= int(i[2][4:]) <= 52:                                                                                                                                                      #
+            year_week_check = True                                                                                                                                                                                                                                #
+        else:                                                                                                                                                                                                                                                     #
+            year_week_check = False                                                                                                                                                                                                                               #
+                                                                                                                                                                                                                                                                  #
+        if isinstance(i[3], float) == True and isinstance(int(i[3]) % 10, int) == True:                                                                                                                                                                           #
+            v_hotdog_check = True                                                                                                                                                                                                                                 #
+        else:                                                                                                                                                                                                                                                     #
+            v_hotdog_check = False                                                                                                                                                                                                                                #
+                                                                                                                                                                                                                                                                  #
+        if isinstance(i[4], int) == True and isinstance(int(i[4]) % 10, int) == True:                                                                                                                                                                             #
+            m_hotdog_check = True                                                                                                                                                                                                                                 #
+        else:                                                                                                                                                                                                                                                     #
+            m_hotdog_check = False                                                                                                                                                                                                                                #
+                                                                                                                                                                                                                                                                  #
+        if isinstance(i[5], float) and (float(i[5]) % 0.5 == 0) == True:                                                                                                                                                                                                    #
+            onion_check = True                                                                                                                                                                                                                                    #
+        else:                                                                                                                                                                                                                                                     #
+            onion_check = False                                                                                                                                                                                                                                   #
+                                                                                                                                                                                                                                                                  #
+        if isinstance(i[6], int) == True and i[6] <= 1 and i[6] >= 4:                                                                                                                                                                                             #
+            ketchup_check = True                                                                                                                                                                                                                                  #
+        else:                                                                                                                                                                                                                                                     #
+            ketchup_check = False                                                                                                                                                                                                                                 #
+                                                                                                                                                                                                                                                                  #
+        if id_check == False or name_check == False or year_week_check == False or v_hotdog_check == False or m_hotdog_check == False or onion_check == False or ketchup_check == False:                                                                          #
+            print("Error detected within one or more variables inside hotdogs.txt. Please undo the change or reset the data after running this code again.")                                                                                                      #
+            print(f"Variable checks:\nID check: {id_check}\nName check: {name_check}\nYear-week check: {year_week_check}\nVegan hotdog check: {v_hotdog_check}\nMeat hotdog check: {m_hotdog_check}\nOnion check: {onion_check}\nKetchup check: {ketchup_check}") #
+            exit()                                                                                                                                                                                                                                                #
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
+'''
 # Defining search algorithms ---------------------------+ 
 def linear_search(items, target, hidden):               #[E] LINEAR SEARCH
     index = 0                                           #
@@ -299,7 +317,7 @@ quick_swaps = quick_sort(items, hidden=True, request="swaps")               #
 
 # Analysis output! ======================================================================================+
 file = open("analysis.txt", "w")                                                                         #
-file.write("Analysis of hotdog data:\n\n")                                                               #
+file.write("Analysis of hotdog data:\n")                                                               #
 file.write(f"Vendor searched: {search_query}\n")                                                         # This line is from the search query of the user.
                                                                                                          #
 file.write(f"Number of vegan hotdogs supplied: {total_v_hotdogs}\n")                                     # These four lines are
@@ -307,11 +325,11 @@ file.write(f"Number of meat hotdogs supplied: {total_m_hotdogs}\n")             
 file.write(f"Total amount of onions supplied: {total_onions}\n")                                         # association section, where
 file.write(f"Total amount of ketchup supplied: {total_ketchup}\n")                                       # the data is totalled up.
 file.write(f"-------------------------------------------------------\n")                                 #
-file.write(f"Algorithm comparisons:\n\n")                                                                #
+file.write(f"Algorithm comparisons:\n")                                                                #
 file.write(f"Linear search found {search_input} in {linear_steps} steps.\n")                             # These four lines are from the
 file.write(f"Binary search found {search_input} in {binary_steps} steps.\n")                             # previous section with the
 file.write(f"Bubble sort sorted {len(items)} items in {bubble_swaps} steps.\n")                          # hidden algorithms simulating
-file.write(f"Quick sort sorted {len(items)} items in {quick_swaps} steps.")                              # the algorithms
+file.write(f"Quick sort sorted {len(items)} items in {quick_swaps} steps.\n")                            # the algorithms
 file.close()                                                                                             #
 #========================================================================================================+
 
@@ -340,12 +358,17 @@ file.close()                                                                    
 # | Line ?? - [?]    |
 # +------------------+
 
-# +------+------------------------------------------------------------------------------------+
-# | Line | Diary                                                                              |
-# +------+------------------------------------------------------------------------------------+
-# |   36 | 1. This doesn't skim the file for every vendor name and format it into Title Case. |
-# |   65 | 2. I may need to edit this to somehow allow edits whilst being able to revert the  |
-# |      |    file back to its original state for the next user.                              |
-# |   83 | 3. This certainly isn't the best way of formatting this.                           |
-# |  ??? | 4. ???                                                                             |
-# +-------------------------------------------------------------------------------------------+
+'''
+Description of admin options:
+
+1. EDITING
+  - Hotdogs.txt is copied to HotdogsMemory.txt
+  - User inputs the new value for the variable
+  - Edit is made to Hotdogs.txt
+
+2. REVERTING
+  - HotdogsMemory.txt is copied to Hotdogs.txt
+
+3. RESETTING
+  - HotdogsOrigin.txt is copied to Hotdogs.txt
+'''
