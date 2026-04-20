@@ -33,13 +33,16 @@
 # | A. Allow the user to edit the variables within 'hotdogs.txt'.                     |     N     |
 # | B. Allow the user to revert the hotdogs.txt file to its previous state.           |     N     |
 # | C. Allow the user to reset the hotdogs.txt file to its initial state.             |     N     |
-# | D. ???                                                                            |     N     | this requirement row is only for place holder purposes
+# | D. Validate each variable within the hotdogs.txt file.                            |     N     |
+# | E. Allow the user to add a new line to the hotdogs.txt file.                      |     N     |
+# | F. ???                                                                            |     N     | this requirement row is only for place-holder purposes
 # +-----------------------------------------------------------------------------------+-----------+
 
 # Creating variables and setting up foundational information ---------------------------------------------------------------+
 print("Available vendors:\n 1. Dolly Dogs\n 2. Korner Kart")                                                                #
 available_vendors = ['Dolly Dogs', 'Korner Kart']                                                                           # List of available vendors
-search_query = str(input("\nPlease enter the name of the vendor you would like to search (2-25, or type ADMIN to edit): ")) # >user inputs search query here
+search_query = str(input("\nPlease enter the name of the vendor you would like to search (2-25, or type ADMIN to edit): ")) # User inputs search query here
+search_query = search_query.title()                                                                                         # Program converts input into title-case
 #---------------------------------------------------------------------------------------------------------------------------+
 
 # Looping validations for 'search_query' ---------------------------------------------------+[D]
@@ -47,8 +50,8 @@ length_check = False                                                            
 available_check = False                                                                     #
 while length_check != True or available_check != True:                                      # "While either of these variables are False, run this piece of code until they are both True."
     # Length Validaton ------------------------------------+                                #
-    if len(search_query) >= 2 and len(search_query) <= 25: #                                # "If the length of the search query is between the inclusive range of 2 to 25...
-        length_check = True                                #                                #  "...the length check becomes True."
+    if len(search_query) >= 2 and len(search_query) <= 25: #                                #[C] "If the length of the search query is between the inclusive range of 2 to 25...
+        length_check = True                                #                                #     "...the length check becomes True."
         # Presence Check ----+                             #                                #
     elif search_query == "": #                             #                                # "Alternatively, if nothing is inputted..."
         length_check = False #                             #                                #  "...the length check stays False."
@@ -56,12 +59,13 @@ while length_check != True or available_check != True:                          
     else:                                                  #                                # "If all above statements are false..."
         length_check = False                               #                                #  "...the length check is too."
     #------------------------------------------------------+                                #
-    # Lookup Validation ------------------+                                                 #
-    if search_query in available_vendors: #                                                 # "If the search query is found in our available vendors list..."
-        available_check = True            #                                                 #  "...the avialbile check becomes True."
-    #-------------------------------------#                                                 #
+    # Lookup Validation -------------------------+                                          #
+    if search_query.ttle() in available_vendors: #                                          # "If the search query is found in our available vendors list..."
+        available_check = True                   #                                          #  "...the avialbile check becomes True."
+    #--------------------------------------------#                                          #
     if length_check != True or available_check != True:                                     # "If, after all the validations, either check is still false..."
         search_query = str(input("Vendor not found, or name out of length range (2-25): ")) #  "...tell the user to input the query again with an error message."
+        search_query = search_query.title()                                                 #
     if search_query == "ADMIN": #                                                           # "If the user inputs 'ADMIN' as the search query..."
         print("Admin mode activated:") #                                                    #  "...tell the user that admin mode is activated..."
         break                                                                               #  "...and break out of the while loop early."
@@ -87,7 +91,7 @@ if search_query == "ADMIN":                                                     
 hotdog_data = []                        #
 file = open("hotdogs.txt", "r")         #
 for line in file:                       #[A]
-    if line.find(search_query) != -1:   # If the search query (case sensitive) isfound in the line...
+    if line.find(search_query) != -1:   # If the search query (case sensitive) is found in the line...
         parts = line.strip().split(",") #  ...strip the line from its commas...
         hotdog_data.append(parts)       #  ...and append it to 'hotdog_data'
     else:                               # If the search query is not found in the line...
@@ -95,7 +99,7 @@ for line in file:                       #[A]
 #---------------------------------------#   This may seem incorrect, but due to the query being forced to be EXACTLY how it's presented to the user (e.g. 'Dolly Dog's)...
                                         #   ...the code can't be given an incorrect vendor name that doesn't exist.
 '''
-# Variable checking ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
+# Variable checking ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#[B]
 for i in hotdog_data:                                                                                                                                                                                                                                             #
     if search_query in i[1] != -1:                                                                                                                                                                                                                                #
         print(i)
@@ -124,12 +128,12 @@ for i in hotdog_data:                                                           
         else:                                                                                                                                                                                                                                                     #
             m_hotdog_check = False                                                                                                                                                                                                                                #
                                                                                                                                                                                                                                                                   #
-        if isinstance(i[5], float) and (float(i[5]) % 0.5 == 0) == True:                                                                                                                                                                                                    #
+        if isinstance(i[5], float) and (float(i[5]) % 0.5 == 0) == True:                                                                                                                                                                                          #
             onion_check = True                                                                                                                                                                                                                                    #
         else:                                                                                                                                                                                                                                                     #
             onion_check = False                                                                                                                                                                                                                                   #
                                                                                                                                                                                                                                                                   #
-        if isinstance(i[6], int) == True and i[6] <= 1 and i[6] >= 4:                                                                                                                                                                                             #
+        if isinstance(i[6], int) == True and 1 <= i[6] >= 4:                                                                                                                                                                                                      #
             ketchup_check = True                                                                                                                                                                                                                                  #
         else:                                                                                                                                                                                                                                                     #
             ketchup_check = False                                                                                                                                                                                                                                 #
@@ -317,7 +321,7 @@ quick_swaps = quick_sort(items, hidden=True, request="swaps")               #
 
 # Analysis output! ======================================================================================+
 file = open("analysis.txt", "w")                                                                         #
-file.write("Analysis of hotdog data:\n")                                                               #
+file.write("Analysis of hotdog data:\n")                                                                 #
 file.write(f"Vendor searched: {search_query}\n")                                                         # This line is from the search query of the user.
                                                                                                          #
 file.write(f"Number of vegan hotdogs supplied: {total_v_hotdogs}\n")                                     # These four lines are
@@ -325,7 +329,7 @@ file.write(f"Number of meat hotdogs supplied: {total_m_hotdogs}\n")             
 file.write(f"Total amount of onions supplied: {total_onions}\n")                                         # association section, where
 file.write(f"Total amount of ketchup supplied: {total_ketchup}\n")                                       # the data is totalled up.
 file.write(f"-------------------------------------------------------\n")                                 #
-file.write(f"Algorithm comparisons:\n")                                                                #
+file.write(f"Algorithm comparisons:\n")                                                                  #
 file.write(f"Linear search found {search_input} in {linear_steps} steps.\n")                             # These four lines are from the
 file.write(f"Binary search found {search_input} in {binary_steps} steps.\n")                             # previous section with the
 file.write(f"Bubble sort sorted {len(items)} items in {bubble_swaps} steps.\n")                          # hidden algorithms simulating
@@ -336,26 +340,26 @@ file.close()                                                                    
 # +------------------+
 # | Repository Links |
 # +------------------+
-# | Line 42 - [D]    |
-# | Line 64 - [A]    |
-# | Line 73 - [E]    |
-# | Line 87 - [F]    |
-# | Line ?? - [?]    |
-# | Line ?? - [?]    |
-# | Line ?? - [?]    |
-# | Line ?? - [?]    |
-# | Line ?? - [?]    |
-# | Line ?? - [?]    |
-# | Line ?? - [?]    |
-# | Line ?? - [?]    |
-# | Line ?? - [?]    |
-# | Line ?? - [?]    |
-# | Line ?? - [?]    |
-# | Line ?? - [?]    |
-# | Line ?? - [?]    |
-# | Line ?? - [?]    |
-# | Line ?? - [?]    |
-# | Line ?? - [?]    |
+# | Line 093 - [A]   |
+# | Line 102 - [B]   |
+# | Line 053 - [C]   |
+# | Line 048 - [D]   |
+# | Line 148 - [E]   |
+# | Line 164 - [F]   |
+# | Line ??? - [?]   |
+# | Line ??? - [?]   |
+# | Line ??? - [?]   |
+# | Line ??? - [?]   |
+# | Line ??? - [?]   |
+# | Line ??? - [?]   |
+# | Line ??? - [?]   |
+# | Line ??? - [?]   |
+# | Line ??? - [?]   |
+# | Line ??? - [?]   |
+# | Line ??? - [?]   |
+# | Line ??? - [?]   |
+# | Line ??? - [?]   |
+# | Line ??? - [?]   |
 # +------------------+
 
 '''
