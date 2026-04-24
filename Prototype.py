@@ -72,55 +72,11 @@ while length_check != True or available_check != True:                          
         break                                                                               #  "...and break out of the while loop early."
 #-------------------------------------------------------------------------------------------#
 
-# Admin editing --------------------------------------------------------------------------------------------------------------------------------------+
-if search_query == "ADMIN":                                                                                                                           #
-    print("\nAdmin options:\n 1. Edit a variable\n 2. Revert the file to its previous state\n 3. Reset the file to its initial state\n 4. Add lines") # Admin options shown to user
-    admin_choice = str(input("Please enter the number of the admin option you would like to use: "))                                                  # User inputs admin choice here
-    while admin_choice not in ["1", "2", "3", "4"] or admin_choice == "":                                                                             # Looping validation for admin choice
-        admin_choice = str(input("Invalid input, please enter a valid admin option: "))                                                               #
-    if admin_choice == "1":
-        line_edit = str(input(f"What line would you like to edit? (1 - {max_lines}"))
-        while line_edit < 1 or line_edit > max_lines or isinstance(line_edit, int) == False or line_edit == "":
-            line_edit = str(input("Invalid input, please enter an integer in range."))
-
-        # Implement the rest of the code here
-        
-    elif admin_choice == "2":
-        input_file = open("hotdogsMemory.txt", "r")
-        output_file = open("hotdogs.txt", "w")
-        for line in input_file:
-            output_file.write(line)
-        input_file.close()
-        output_file.close()
-            
-    elif admin_choice == "3":
-        input_file = open("hotdogsOrigin.txt", "r")
-        output_file = open("hotdogs.txt", "w")
-        for line in input_file:
-            output_file.write(line)
-        input_file.close()
-        output_file.close()
-
-    else:
-        pass # This is just a placeholder, as the code for this option is not yet implemented.
-
-    print("Admin choice executed, please run the code again to check the functionality of the data.")                                                 # Message to user after admin choice is executed
-    exit()                                                                                                                                            # Exit the code after admin choice is made, as the user needs to edit
-#-----------------------------------------------------------------------------------------------------------------------------------------------------+
-
-# Array handling -----------------------+
-hotdog_data = []                        #
-max_lines = 0                           #
-file = open("hotdogs.txt", "r")         #
-for line in file:                       #[A]
-    if line.find(search_query) != -1:   # If the search query is found in the line...
-        parts = line.strip().split(",") #  ...strip the line from its commas...
-        hotdog_data.append(parts)       #  ...and append it to 'hotdog_data'
-    max_lines += 1                      # This may seem incorrect, but due to the query being forced to be nearly EXACTLY how it's presented to the user (e.g. 'Dolly Dog's / 'dolly dogs')...
-#---------------------------------------# ...the code can't be given an incorrect vendor name that doesn't exist.
-
 # Variable checking ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#[B]
-for i in hotdog_data:                                                                                                                                                                                                                                             #
+hotdog_data = open("hotdogs.txt", "r")                                                                                                                                                                                                                                   #
+                                                                                                                                                                                                                                                                  #
+for line in hotdog_data:
+    i = line.strip().split(',')                                                                                                                                                                                                                                             #
     if search_query in i[1] != -1:                                                                                                                                                                                                                                #
         if len(i[0]) == 6 and i[0][0].isupper() == True and i[0][1].isupper() == True and i[0][2] == "_" and i[0][3].isdigit() == True and i[0][4].isdigit() == True and i[0][5].isdigit() == True:                                                               #
             id_check = True                                                                                                                                                                                                                                       #
@@ -161,8 +117,56 @@ for i in hotdog_data:                                                           
             print("Error detected within one or more variables inside hotdogs.txt. Please undo the change or reset the data after running this code again.")                                                                                                      #
             print(f"Variable checks:\nID check: {id_check}\nName check: {name_check}\nYear-week check: {year_week_check}\nVegan hotdog check: {v_hotdog_check}\nMeat hotdog check: {m_hotdog_check}\nOnion check: {onion_check}\nKetchup check: {ketchup_check}") #
             exit()                                                                                                                                                                                                                                                #
-print("Variable checks passed, no errors detected in hotdogs.txt.")                                                                                                                                                                                               #
+print("Variable checks passed, no errors detected in hotdogs.txt.")   
+hotdog_data.close()                                                                                                                                                                                                                                               #
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
+
+# Array handling -----------------------+
+hotdog_data = []                        #
+max_lines = 0                           #
+file = open("hotdogs.txt", "r")         #
+for line in file:                       #[A]
+    if line.find(search_query) != -1:   # If the search query is found in the line...
+        parts = line.strip().split(",") #  ...strip the line from its commas...
+        hotdog_data.append(parts)       #  ...and append it to 'hotdog_data'
+    max_lines += 1                      # This may seem incorrect, but due to the query being forced to be nearly EXACTLY how it's presented to the user (e.g. 'Dolly Dog's / 'dolly dogs')...
+#---------------------------------------# ...the code can't be given an incorrect vendor name that doesn't exist.
+
+# Admin editing --------------------------------------------------------------------------------------------------------------------------------------+
+if search_query == "ADMIN":                                                                                                                           #
+    print("\nAdmin options:\n 1. Edit a variable\n 2. Revert the file to its previous state\n 3. Reset the file to its initial state\n 4. Add lines") # Admin options shown to user
+    admin_choice = str(input("Please enter the number of the admin option you would like to use: "))                                                  # User inputs admin choice here
+    while admin_choice not in ["1", "2", "3", "4"] or admin_choice == "":                                                                             # Looping validation for admin choice
+        admin_choice = str(input("Invalid input, please enter a valid admin option: "))                                                               #
+    if admin_choice == "1":
+        line_edit = str(input(f"What line would you like to edit? (1 - {max_lines}"))
+        while line_edit < 1 or line_edit > max_lines or isinstance(line_edit, int) == False or line_edit == "":
+            line_edit = str(input("Invalid input, please enter an integer in range."))
+
+        # Implement the rest of the code here
+        
+    elif admin_choice == "2":
+        input_file = open("hotdogsMemory.txt", "r")
+        output_file = open("hotdogs.txt", "w")
+        for line in input_file:
+            output_file.write(line)
+        input_file.close()
+        output_file.close()
+            
+    elif admin_choice == "3":
+        input_file = open("hotdogsOrigin.txt", "r")
+        output_file = open("hotdogs.txt", "w")
+        for line in input_file:
+            output_file.write(line)
+        input_file.close()
+        output_file.close()
+
+    else:
+        pass # This is just a placeholder, as the code for this option is not yet implemented.
+
+    print("Admin choice executed, please run the code again to check the functionality of the data.")                                                 # Message to user after admin choice is executed
+    exit()                                                                                                                                            # Exit the code after admin choice is made, as the user needs to edit
+#-----------------------------------------------------------------------------------------------------------------------------------------------------+
 
 # Defining search algorithms ---------------------------+ 
 def linear_search(items, target, hidden, request):      #[E] LINEAR SEARCH
