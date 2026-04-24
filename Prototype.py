@@ -79,9 +79,9 @@ if search_query == "ADMIN":                                                     
     while admin_choice not in ["1", "2", "3", "4"] or admin_choice == "":                                                                             # Looping validation for admin choice
         admin_choice = str(input("Invalid input, please enter a valid admin option: "))                                                               #
     if admin_choice == "1":
-        line_edit = str(input(f"What line would you like to edit? (1 - {max_lines}")
+        line_edit = str(input(f"What line would you like to edit? (1 - {max_lines}"))
         while line_edit < 1 or line_edit > max_lines or isinstance(line_edit, int) == False or line_edit == "":
-            line_edit = str(input("Invalid input, please enter an integer in range.")
+            line_edit = str(input("Invalid input, please enter an integer in range."))
 
         # Implement the rest of the code here
         
@@ -89,16 +89,21 @@ if search_query == "ADMIN":                                                     
         input_file = open("hotdogsMemory.txt", "r")
         output_file = open("hotdogs.txt", "w")
         for line in input_file:
-            outputfile.write(line)
+            output_file.write(line)
+        input_file.close()
+        output_file.close()
             
     elif admin_choice == "3":
         input_file = open("hotdogsOrigin.txt", "r")
         output_file = open("hotdogs.txt", "w")
         for line in input_file:
-            outputfile.write(line)
+            output_file.write(line)
+        input_file.close()
+        output_file.close()
 
     else:
-        # Implement code here
+        pass # This is just a placeholder, as the code for this option is not yet implemented.
+
     print("Admin choice executed, please run the code again to check the functionality of the data.")                                                 # Message to user after admin choice is executed
     exit()                                                                                                                                            # Exit the code after admin choice is made, as the user needs to edit
 #-----------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -111,11 +116,9 @@ for line in file:                       #[A]
     if line.find(search_query) != -1:   # If the search query is found in the line...
         parts = line.strip().split(",") #  ...strip the line from its commas...
         hotdog_data.append(parts)       #  ...and append it to 'hotdog_data'
-    max_lines += 1                      #
-    else:                               # If the search query is not found in the line...
-        continue                        #  ...skip to the next line in the file.
-#---------------------------------------#   This may seem incorrect, but due to the query being forced to be EXACTLY how it's presented to the user (e.g. 'Dolly Dog's)...
-                                        #   ...the code can't be given an incorrect vendor name that doesn't exist.
+    max_lines += 1                      # This may seem incorrect, but due to the query being forced to be nearly EXACTLY how it's presented to the user (e.g. 'Dolly Dog's / 'dolly dogs')...
+#---------------------------------------# ...the code can't be given an incorrect vendor name that doesn't exist.
+
 # Variable checking ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#[B]
 for i in hotdog_data:                                                                                                                                                                                                                                             #
     if search_query in i[1] != -1:                                                                                                                                                                                                                                #
@@ -172,7 +175,7 @@ def linear_search(items, target, hidden, request):      #[E] LINEAR SEARCH
             found = True                                #
         else:                                           #
             index += 1                                  #
-    end_time = time.perf counter                        #
+    end_time = time.perf_counter()                      #
                                                         #
     if found == False:                                  #
         print(f"{target} not found.")                   #
@@ -183,7 +186,7 @@ def linear_search(items, target, hidden, request):      #[E] LINEAR SEARCH
     else:                                               #
         return index                                    #
                                                         #
-def binary_search(items, target, hidden):               #[F] BINARY SEARCH:
+def binary_search(items, target, hidden, request):      #[F] BINARY SEARCH:
     start_time = time.perf_counter()                    #
     found = False                                       # 
     first = 0                                           #
@@ -203,12 +206,14 @@ def binary_search(items, target, hidden):               #[F] BINARY SEARCH:
         else:                                           #
             last = midpoint - 1                         #
         steps += 1                                      #
-    end_time = time.perf counter                        #
+    end_time = time.perf_counter()                      #
                                                         #
+    if hidden != True:                                  #
+        print(f"Found {target} after {steps} step(s).") #
     if request == "time":                               #
         return (end_time - start_time)                  #
     else:                                               #
-        return index                                    #
+        return steps                                    #
 #-------------------------------------------------------+
 
 # Defining sort algorithms -------------------------------------+
@@ -221,7 +226,7 @@ def bubble_sort(items, hidden, request):                        # BUBBLE SORT:
             if items[j] > items[j + 1]:                         #
                 items[j], items[j + 1] = items[j + 1], items[j] #
                 swaps += 1                                      #
-    end_time = time.perf counter                                #
+    end_time = time.perf_counter()                              #
                                                                 #
     if hidden != True:                                          #
         print(f"Sorted after {swaps} swap(s).")                 #
@@ -230,7 +235,7 @@ def bubble_sort(items, hidden, request):                        # BUBBLE SORT:
     if request == "time":                                       #
         return (end_time - start_time)                          #
     else:                                                       #
-        return index                                            #
+        return items                                            #
                                                                 #
 def quick_sort(items, hidden, request):                         # QUICK SORT:
     start_time = time.perf_counter()                            #
@@ -244,7 +249,7 @@ def quick_sort(items, hidden, request):                         # QUICK SORT:
     swaps += len(middle)                                        #
     right = [x for x in items if x > pivot]                     #
     swaps += len(right)                                         #
-    end_time = time.perf counter                                #
+    end_time = time.perf_counter()                              #
                                                                 #
     if hidden != True:                                          #
         print(f"Sorted after {swaps} swap(s).")                 #
@@ -253,7 +258,7 @@ def quick_sort(items, hidden, request):                         # QUICK SORT:
     if request == "time":                                       #
         return (end_time - start_time)                          #
     else:                                                       #
-        return index                                            #
+        return left, middle, right                              #
 #---------------------------------------------------------------+ 
 
 # User-inputted category search ----------------------------------------------------------------------------------------------------------------+
@@ -272,7 +277,7 @@ while query_check != True:                                                      
 #-----------------------------------------------------------------------------------------------------------------------------------------------+
 
 # Filtering data ------------------------------------------------------------+
-def filter_scraper(target_filter, vendor_name, data, hidden):                #
+def filter_scraper(target_filter, vendor_name, hotdog_data, hidden):         #
     file = open("hotdogs.txt", "r")                                          #
     items = []                                                               #
     i = 0                                                                    #
@@ -307,19 +312,19 @@ if sort_input == "Y":                                                           
 #-----------------------------------------------------------------------------------------------------------------------+
 
 # Searching ----------------------------------------------------------------------------------------------------------------+
-search_input = str(input("What is your search query?: "))                                                                   #
-while search_input not in items or search_input == "":                                                                      #
-    search_input = str(input("Query not found, please enter a valid query: "))                                              #
+target = str(input("What is your search query?: "))                                                                         #
+while target not in items or target == "":                                                                                  #
+    target = str(input("Query not found, please enter a valid query: "))                                                    #
                                                                                                                             #
 search_options = ["Linear Search", "Binary Search"]                                                                         #
 search_choice = str(input(f"Which searching algorithm would you like to use? ({search_options[0]}/{search_options[1]}): ")) #
 while search_choice not in search_options or search_choice == "":                                                           #
     search_choice = str(input("Invalid input, please enter a valid searching algorithm: "))                                 #
 if search_choice == search_options[0]:                                                                                      #
-    linear_search(items, search_input, hidden=False, "placeholder")                                                         #
+    linear_search(items, target, False, "placeholder")                                                                      #
 else:                                                                                                                       #
     print("WARNING: Binary Search requires sorting before it is used.")                                                     # This warning is put in place because binary sort requires a sorted list.
-    binary_search(items, search_input, hidden=False, "placeholder")                                                         #
+    binary_search(items, target, False, "placeholder")                                                                      #
 #---------------------------------------------------------------------------------------------------------------------------+
 
 # Secondary variable association -------------------------------------+
@@ -346,36 +351,35 @@ for i in ketchup:                                                     #
 file.close()                                                          #
 #---------------------------------------------------------------------+
 
-# Background algorithms hidden from user -------------------------------------+
-items = filter_scraper(user_search, search_query, hotdog_data, hidden=True)   # Resetting items to original state
-                                                                              #
-linear_steps = linear_search(items, search_input, hidden=True, "placeholder") # Sorting for binary search
-bubble_sort(items, hidden=True, "placeholder")                                #
-binary_steps = binary_search(items, search_input, hidden=True, "placeholder") # Searching with binary_search algorithm
-                                                                              #
-items = filter_scraper(user_search, search_query, hotdog_data, hidden=True)   # Resetting 
-                                                                              #
-bubble_swaps = bubble_sort(items, hidden=True, request="swaps")               #
-quick_swaps = quick_sort(items, hidden=True, request="swaps")                 #
-#-----------------------------------------------------------------------------+
+# Background algorithms hidden from user ---------------------------------------+
+items = filter_scraper(user_search, search_query, hotdog_data, hidden=True)     # Resetting items to original state
+                                                                                #
+linear_steps = linear_search(items, target, hidden=True, request="placeholder") # Sorting for binary search
+bubble_sort(items, hidden=True, request="placeholder")                          #
+binary_steps = binary_search(items, target, hidden=True, request="placeholder") # Searching with binary_search algorithm
+                                                                                #
+items = filter_scraper(user_search, search_query, hotdog_data, hidden=True)     # Resetting 
+bubble_swaps = bubble_sort(items, hidden=True, request="swaps")                 #
+quick_swaps = quick_sort(items, hidden=True, request="swaps")                   #
+#-------------------------------------------------------------------------------+
 
-# Analysis output! =============================================================================================================================================================+
-file = open("analysis.txt", "w")                                                                                                                                                # Opening file
-file.write("Analysis of hotdog data:\n")                                                                                                                                        # Start of analysis file
-file.write(f"Vendor searched: {search_query}\n")                                                                                                                                # This line is from the search query of the user.
-                                                                                                                                                                                #
-file.write(f"Number of vegan hotdogs supplied: {total_v_hotdogs}\n")                                                                                                            # These four lines are
-file.write(f"Number of meat hotdogs supplied: {total_m_hotdogs}\n")                                                                                                             # from the variable
-file.write(f"Total amount of onions supplied: {total_onions}\n")                                                                                                                # association section, where
-file.write(f"Total amount of ketchup supplied: {total_ketchup}\n")                                                                                                              # the data is totalled up.
-file.write(f"-------------------------------------------------------\n")                                                                                                        #
-file.write(f"Algorithm comparisons:\n")                                                                                                                                         #
-file.write(f"Linear search found {search_input} in {linear_steps} steps, and took {linear_search(items, hidden=True, request="time")*1000000} microseconds.\n")                 # These four lines are from the
-file.write(f"Binary search, after sorting, found {search_input} in {binary_steps} steps, and took {binary_search(items, hidden=True, request="time")*1000000} microseconds.\n") # previous section with the
-file.write(f"Bubble sort sorted {len(items)} items in {bubble_swaps} steps, and took {bubble_sort(items, hidden=True, request="time")*1000000} microseconds.\n")                # hidden algorithms simulating
-file.write(f"Quick sort sorted {len(items)} items in {quick_swaps} steps, and took {quick_sort(items, hidden=True, request="time")*1000000} microseconds.\n")                   # the algorithms
-file.close()                                                                                                                                                                    #
-#===============================================================================================================================================================================+
+# Analysis output! =========================================================================================================================================================================+
+file = open("analysis.txt", "w")                                                                                                                                                            # Opening file
+file.write("Analysis of hotdog data:\n")                                                                                                                                                    # Start of analysis file
+file.write(f"Vendor searched: {search_query}\n")                                                                                                                                            # This line is from the search query of the user.
+                                                                                                                                                                                            #
+file.write(f"Number of vegan hotdogs supplied: {total_v_hotdogs}\n")                                                                                                                        # These four lines are
+file.write(f"Number of meat hotdogs supplied: {total_m_hotdogs}\n")                                                                                                                         # from the variable
+file.write(f"Total amount of onions supplied: {total_onions}\n")                                                                                                                            # association section, where
+file.write(f"Total amount of ketchup supplied: {total_ketchup}\n")                                                                                                                          # the data is totalled up.
+file.write(f"-------------------------------------------------------\n")                                                                                                                    #
+file.write(f"Algorithm comparisons:\n")                                                                                                                                                     #
+file.write(f"Linear search found {target} in {linear_steps} steps, and took {(linear_search(items, target, hidden=True, request="time")*1000000):.2f} microseconds.\n")                 # These four lines are from the
+file.write(f"Binary search, after sorting, found {target} in {binary_steps} steps, and took {binary_search(items, target, hidden=True, request="time")*1000000:.2f} microseconds.\n") # previous section with the
+file.write(f"Bubble sort sorted {len(items)} items in {bubble_swaps} steps, and took {bubble_sort(items, hidden=True, request="time")*1000000:.2f} microseconds.\n")                        # hidden algorithms simulating
+file.write(f"Quick sort sorted {len(items)} items in {quick_swaps} steps, and took {quick_sort(items, hidden=True, request="time")*1000000:.2f} microseconds.\n")                           # the algorithms
+file.close()                                                                                                                                                                                #
+#===========================================================================================================================================================================================+
 
 # +------------------+
 # | Repository Links |
@@ -386,20 +390,7 @@ file.close()                                                                    
 # | Line 048 - [D]   |
 # | Line 156 - [E]   |
 # | Line 177 - [F]   |
-# | Line ??? - [?]   |
-# | Line ??? - [?]   |
-# | Line ??? - [?]   |
-# | Line ??? - [?]   |
-# | Line ??? - [?]   |
-# | Line ??? - [?]   |
-# | Line ??? - [?]   |
-# | Line ??? - [?]   |
-# | Line ??? - [?]   |
-# | Line ??? - [?]   |
-# | Line ??? - [?]   |
-# | Line ??? - [?]   |
-# | Line ??? - [?]   |
-# | Line ??? - [?]   |
+# | Line ??? - [?]   | this requirement row is only for place-holder purposes
 # +------------------+
 
 '''
