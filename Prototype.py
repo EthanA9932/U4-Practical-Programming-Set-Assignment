@@ -40,7 +40,7 @@
 
 # Creating variables and setting up foundational information ---------------------------------------------------------------+
 import time                                                                                                                 # Importing Module
-print("\nAvailable vendors:\n 1. Dolly Dogs\n 2. Korner Kart")                                                              #
+print("\nAvailable vendors:\n 1. Dolly Dogs\n 2. Korner Kart")                                                              # Creating list
 available_vendors = ['Dolly Dogs', 'Korner Kart']                                                                           # List of available vendors
 search_query = str(input("\nPlease enter the name of the vendor you would like to search (2-25, or type ADMIN to edit): ")) # User inputs search query here
 search_query = search_query.title()                                                                                         # Program converts input into title-case
@@ -66,7 +66,7 @@ while length_check != True or available_check != True:                          
     #--------------------------------------------#                                          #
     if length_check != True or available_check != True:                                     # "If, after all the validations, either check is still false..."
         search_query = str(input("Vendor not found, or name out of length range (2-25): ")) #  "...tell the user to input the query again with an error message."
-        search_query = search_query.title()                                                 #
+        search_query = search_query.title()                                                 # Converting Search_query To Title Case
     if search_query == "ADMIN": #                                                           # "If the user inputs 'ADMIN' as the search query..."
         print("Admin mode activated:") #                                                    #  "...tell the user that admin mode is activated..."
         break                                                                               #  "...and break out of the while loop early."
@@ -76,23 +76,29 @@ while length_check != True or available_check != True:                          
 if search_query == "ADMIN":                                                                                                                           #
     print("\nAdmin options:\n 1. Edit a variable\n 2. Revert the file to its previous state\n 3. Reset the file to its initial state\n 4. Add lines") # Admin options shown to user
     admin_choice = str(input("Please enter the number of the admin option you would like to use: "))                                                  # User inputs admin choice here
-    while admin_choice not in ["1", "2", "3"] or admin_choice == "":                                                                                  # Looping validation for admin choice
+    while admin_choice not in ["1", "2", "3", "4"] or admin_choice == "":                                                                             # Looping validation for admin choice
         admin_choice = str(input("Invalid input, please enter a valid admin option: "))                                                               #
     if admin_choice == "1":
         line_edit = str(input(f"What line would you like to edit? (1 - {max_lines}")
         while line_edit < 1 or line_edit > max_lines or isinstance(line_edit, int) == False or line_edit == "":
-            line_edit = str(input("Ivalid input, please enter an integer in range.")
+            line_edit = str(input("Invalid input, please enter an integer in range.")
+
+        # Implement the rest of the code here
         
     elif admin_choice == "2":
         input_file = open("hotdogsMemory.txt", "r")
         output_file = open("hotdogs.txt", "w")
         for line in input_file:
             outputfile.write(line)
-    else:
+            
+    elif admin_choice == "3":
         input_file = open("hotdogsOrigin.txt", "r")
         output_file = open("hotdogs.txt", "w")
         for line in input_file:
             outputfile.write(line)
+
+    else:
+        # Implement code here
     print("Admin choice executed, please run the code again to check the functionality of the data.")                                                 # Message to user after admin choice is executed
     exit()                                                                                                                                            # Exit the code after admin choice is made, as the user needs to edit
 #-----------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -343,29 +349,33 @@ file.close()                                                          #
 # Background algorithms hidden from user -------------------------------------+
 items = filter_scraper(user_search, search_query, hotdog_data, hidden=True)   # Resetting items to original state
                                                                               #
-linear_steps = linear_search(items, search_input, hidden=True, "placeholder") #
-binary_steps = binary_search(items, search_input, hidden=True, "placeholder") # Will have to sort out bubble sort later, it requires a sorted list.
+linear_steps = linear_search(items, search_input, hidden=True, "placeholder") # Sorting for binary search
+bubble_sort(items, hidden=True, "placeholder")                                #
+binary_steps = binary_search(items, search_input, hidden=True, "placeholder") # Searching with binary_search algorithm
+                                                                              #
+items = filter_scraper(user_search, search_query, hotdog_data, hidden=True)   # Resetting 
+                                                                              #
 bubble_swaps = bubble_sort(items, hidden=True, request="swaps")               #
 quick_swaps = quick_sort(items, hidden=True, request="swaps")                 #
 #-----------------------------------------------------------------------------+
 
-# Analysis output! ==============================================================================================================================================+
-file = open("analysis.txt", "w")                                                                                                                                 #
-file.write("Analysis of hotdog data:\n")                                                                                                                         #
-file.write(f"Vendor searched: {search_query}\n")                                                                                                                 # This line is from the search query of the user.
-                                                                                                                                                                 #
-file.write(f"Number of vegan hotdogs supplied: {total_v_hotdogs}\n")                                                                                             # These four lines are
-file.write(f"Number of meat hotdogs supplied: {total_m_hotdogs}\n")                                                                                              # from the variable
-file.write(f"Total amount of onions supplied: {total_onions}\n")                                                                                                 # association section, where
-file.write(f"Total amount of ketchup supplied: {total_ketchup}\n")                                                                                               # the data is totalled up.
-file.write(f"-------------------------------------------------------\n")                                                                                         #
-file.write(f"Algorithm comparisons:\n")                                                                                                                          #
-file.write(f"Linear search found {search_input} in {linear_steps} steps, and took {linear_search(items, hidden=True, request="time")*1000000} microseconds.\n")  # These four lines are from the
-file.write(f"Binary search found {search_input} in {binary_steps} steps, and took {binary_search(items, hidden=True, request="time")*1000000} microseconds.\n")  # previous section with the
-file.write(f"Bubble sort sorted {len(items)} items in {bubble_swaps} steps, and took {bubble_sort(items, hidden=True, request="time")*1000000} microseconds.\n") # hidden algorithms simulating
-file.write(f"Quick sort sorted {len(items)} items in {quick_swaps} steps, and took {quick_sort(items, hidden=True, request="time")*1000000} microseconds.\n")    # the algorithms
-file.close()                                                                                                                                                     #
-#================================================================================================================================================================+
+# Analysis output! =============================================================================================================================================================+
+file = open("analysis.txt", "w")                                                                                                                                                # Opening file
+file.write("Analysis of hotdog data:\n")                                                                                                                                        # Start of analysis file
+file.write(f"Vendor searched: {search_query}\n")                                                                                                                                # This line is from the search query of the user.
+                                                                                                                                                                                #
+file.write(f"Number of vegan hotdogs supplied: {total_v_hotdogs}\n")                                                                                                            # These four lines are
+file.write(f"Number of meat hotdogs supplied: {total_m_hotdogs}\n")                                                                                                             # from the variable
+file.write(f"Total amount of onions supplied: {total_onions}\n")                                                                                                                # association section, where
+file.write(f"Total amount of ketchup supplied: {total_ketchup}\n")                                                                                                              # the data is totalled up.
+file.write(f"-------------------------------------------------------\n")                                                                                                        #
+file.write(f"Algorithm comparisons:\n")                                                                                                                                         #
+file.write(f"Linear search found {search_input} in {linear_steps} steps, and took {linear_search(items, hidden=True, request="time")*1000000} microseconds.\n")                 # These four lines are from the
+file.write(f"Binary search, after sorting, found {search_input} in {binary_steps} steps, and took {binary_search(items, hidden=True, request="time")*1000000} microseconds.\n") # previous section with the
+file.write(f"Bubble sort sorted {len(items)} items in {bubble_swaps} steps, and took {bubble_sort(items, hidden=True, request="time")*1000000} microseconds.\n")                # hidden algorithms simulating
+file.write(f"Quick sort sorted {len(items)} items in {quick_swaps} steps, and took {quick_sort(items, hidden=True, request="time")*1000000} microseconds.\n")                   # the algorithms
+file.close()                                                                                                                                                                    #
+#===============================================================================================================================================================================+
 
 # +------------------+
 # | Repository Links |
