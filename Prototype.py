@@ -132,41 +132,77 @@ for line in file:                       #[A]
     max_lines += 1                      # This may seem incorrect, but due to the query being forced to be nearly EXACTLY how it's presented to the user (e.g. 'Dolly Dog's / 'dolly dogs')...
 #---------------------------------------# ...the code can't be given an incorrect vendor name that doesn't exist.
 
-# Admin editing --------------------------------------------------------------------------------------------------------------------------------------+
-if search_query == "ADMIN":                                                                                                                           #
-    print("\nAdmin options:\n 1. Edit a variable\n 2. Revert the file to its previous state\n 3. Reset the file to its initial state\n 4. Add lines") # Admin options shown to user
-    admin_choice = str(input("Please enter the number of the admin option you would like to use: "))                                                  # User inputs admin choice here
-    while admin_choice not in ["1", "2", "3", "4"] or admin_choice == "":                                                                             # Looping validation for admin choice
-        admin_choice = str(input("Invalid input, please enter a valid admin option: "))                                                               #
-    if admin_choice == "1":
-        line_edit = str(input(f"What line would you like to edit? (1 - {max_lines}"))
-        while line_edit < 1 or line_edit > max_lines or isinstance(line_edit, int) == False or line_edit == "":
-            line_edit = str(input("Invalid input, please enter an integer in range."))
-
-        # Implement the rest of the code here
-        
-    elif admin_choice == "2":
-        input_file = open("hotdogsMemory.txt", "r")
-        output_file = open("hotdogs.txt", "w")
-        for line in input_file:
-            output_file.write(line)
-        input_file.close()
-        output_file.close()
-            
-    elif admin_choice == "3":
-        input_file = open("hotdogsOrigin.txt", "r")
-        output_file = open("hotdogs.txt", "w")
-        for line in input_file:
-            output_file.write(line)
-        input_file.close()
-        output_file.close()
-
-    else:
-        pass # This is just a placeholder, as the code for this option is not yet implemented.
-
-    print("Admin choice executed, please run the code again to check the functionality of the data.")                                                 # Message to user after admin choice is executed
-    exit()                                                                                                                                            # Exit the code after admin choice is made, as the user needs to edit
-#-----------------------------------------------------------------------------------------------------------------------------------------------------+
+# Admin editing ---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+if search_query == "ADMIN":                                                                                                                                                          #
+    print("\nAdmin options:\n 1. Edit a variable\n 2. Revert the file to its previous state\n 3. Reset the file to its initial state\n 4. Add lines")                                # Admin options shown to user
+    admin_choice = str(input("Please enter the number of the admin option you would like to use: "))                                                                                 # User inputs admin choice here
+    while admin_choice not in ["1", "2", "3", "4"] or admin_choice == "":                                                                                                            # Looping validation for admin choice
+        admin_choice = str(input("Invalid input, please enter a valid admin option: "))                                                                                              #
+    if admin_choice == "1":                                                                                                                                                          #
+        line_edit = str(input(f"What line would you like to edit? (1 - {max_lines}"))                                                                                                #
+        while line_edit < 1 or line_edit > max_lines or isinstance(line_edit, int) == False or line_edit == "":                                                                      #
+            line_edit = str(input("Invalid input, please enter an integer in range."))                                                                                               #
+                                                                                                                                                                                     #
+        file = open("hotdogs.txt", "r")                                                                                                                                              #
+        lines = []                                                                                                                                                                   #
+        for line in file:                                                                                                                                                            #
+            lines.append(line)                                                                                                                                                       #
+        file.close()                                                                                                                                                                 #
+        editing_line = lines[line_edit-1].strip().split(",")                                                                                                                         #
+        print(f"Current line: {lines[line_edit-1]}")                                                                                                                                 #
+        variable_edit = str(input("What variable would you like to edit? (1. vendor_id, 2. vendor_name, 3. year_week, 4. vegan_hotdogs, 5. meat_hotdogs, 6. onions, 7. ketchup): ")) #
+        while variable_edit not in ["1", "2", "3", "4", "5", "6", "7"] or variable_edit == "" or isinstance(variable_edit, int) == False:                                            #
+            variable_edit = str(input("Invalid input, please enter an integer in range: "))                                                                                          #
+        if variable_edit in ["1", "2"]:                                                                                                                                              #
+            new_value = str(input("What would you like to change the variable to?: "))                                                                                               #
+        elif variable_edit == "3":                                                                                                                                                   #
+            new_value = str(input("What would you like to change the variable to? (Format: YYYYWW, where YYYY [2000-2026]is the year and WW [01-52] is the week number): "))         #
+        elif variable_edit in ["4", "5"]:                                                                                                                                            #
+            new_value = str(input("What would you like to change the variable to? (Must be an integer, and a multiple of 10): "))                                                    #
+        elif variable_edit == "6":                                                                                                                                                   #
+            new_value = str(input("What would you like to change the variable to? (Must be a float, and divisible by 0.5): "))                                                       #
+        else:                                                                                                                                                                        #
+            new_value = str(input("What would you like to change the variable to? (Must be an integer between 1 and 4, inclusive): "))                                               #
+                                                                                                                                                                                     #                                                                                                                    #
+        read_file = open("hotdogs.txt", "r")                                                                                                                                         #
+        write_file = open("hotdogsMemory.txt", "w")                                                                                                                                  #
+        for line in read_file:                                                                                                                                                       #
+            write_file.write(line)                                                                                                                                                   #
+        read_file.close()                                                                                                                                                            #
+        write_file.close()                                                                                                                                                           #
+                                                                                                                                                                                     #                                                                                                                    #
+        lines[line_edit-1] = lines[line_edit-1].strip().split(",")                                                                                                                   # This is a bit of a hack to maintain the original formatting of the line, as the line is split into a list, then the variable is edited, then the list is joined back into a string with commas.
+        lines[line_edit-1][int(variable_edit)-1] = new_value                                                                                                                         #
+        lines[line_edit-1] = ",".join(lines[line_edit-1]) + "\n"                                                                                                                     # 
+                                                                                                                                                                                     #
+        file = open("hotdogs.txt", "w")                                                                                                                                              #
+        for i in lines:                                                                                                                                                              #
+            file.write(lines[lines.index(i)])                                                                                                                                        #
+        file.close()                                                                                                                                                                 #
+                                                                                                                                                                                     #
+    elif admin_choice == "2":                                                                                                                                                        #
+        input_file = open("hotdogsMemory.txt", "r")                                                                                                                                  #
+        output_file = open("hotdogs.txt", "w")                                                                                                                                       #
+        for line in input_file:                                                                                                                                                      #
+            output_file.write(line)                                                                                                                                                  #
+        input_file.close()                                                                                                                                                           #
+        output_file.close()                                                                                                                                                          #
+                                                                                                                                                                                     #
+    elif admin_choice == "3":                                                                                                                                                        #
+        input_file = open("hotdogsOrigin.txt", "r")                                                                                                                                  #
+        output_file = open("hotdogs.txt", "w")                                                                                                                                       #
+        for line in input_file:                                                                                                                                                      #
+            output_file.write(line)                                                                                                                                                  #
+        input_file.close()                                                                                                                                                           #
+        output_file.close()                                                                                                                                                          #
+                                                                                                                                                                                     #
+    else:                                                                                                                                                                            #
+        print("This option (4) is not yet implemented, please run the code again to check the functionality of the data.")                                                           # This option is not yet implemented, but will be in the future. It will allow the user to add a new line to the hotdogs.txt file, which will then be included in the data for searching and sorting.
+        pass # This is just a placeholder, as the code for this option is not yet implemented.                                                                                       #
+                                                                                                                                                                                     #
+    print("Admin choice executed, please run the code again to check the functionality of the data.")                                                                                # Message to user after admin choice is executed
+    exit()                                                                                                                                                                           # Exit the code after admin choice is made, as the user needs to edit
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 # Defining search algorithms ---------------------------+ 
 def linear_search(items, target, hidden, request):      #[E] LINEAR SEARCH
