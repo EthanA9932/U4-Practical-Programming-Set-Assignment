@@ -1,0 +1,35 @@
+User: The code is not recognizing "Admin" as a valid command.
+
+GitHub Copilot: I'll examine the Prototype.py file to understand why "Admin" isn't being recognized as a valid command. 
+
+Read [](file:///Users/ethanayestaran/GitHubRepositories/School/Computing/U4-Practical-Programming-Set-Assignment/Prototype.py#1-1), lines 1 to 100
+
+Read [](file:///Users/ethanayestaran/GitHubRepositories/School/Computing/U4-Practical-Programming-Set-Assignment/Prototype.py#100-100), lines 100 to 250
+
+Let me read more of the file to see the full validation logic: 
+
+Read [](file:///Users/ethanayestaran/GitHubRepositories/School/Computing/U4-Practical-Programming-Set-Assignment/Prototype.py#110-110), lines 110 to 140
+
+I found the issue! In the validation loop, `available_check` is never reset to `False` at the beginning of each iteration. This causes problems when validating whether "Admin" is in the list. Additionally, the lookup should happen before the other checks to ensure proper state.
+
+Here's the fix: 
+
+Replacing 25 lines with 28 lines in [](file:///Users/ethanayestaran/GitHubRepositories/School/Computing/U4-Practical-Programming-Set-Assignment/Prototype.py)
+
+
+```
+
+```
+Fixed! The issue was that `available_check` was never being reset to `False` at the beginning of each loop iteration. This caused the validation to fail for the "Admin" command because the variable wasn't being properly evaluated each time.
+
+The changes I made:
+1. **Added `available_check = False`** at the start of each loop iteration (before any checks) so it resets properly
+2. **Added `available_check = True`** right before the break statement when "Admin" is detected, ensuring the variable is set correctly before exiting the loop
+
+Now when you type "Admin" (or "admin", which gets converted to "Admin" via `.title()`), it will be properly recognized and the admin mode will activate.
+
+Made changes.
+
+User: Thank you! i tested the code and this bit runs perfectly.
+
+GitHub Copilot: Great! Glad the fix worked. If you run into any other issues with the code, just let me know!

@@ -31,11 +31,11 @@
 # +-----------------------------------------------------------------------------------+           |
 # |                               Secondary Milestones:                               |           |
 # +-----------------------------------------------------------------------------------+           |
-# | A. Allow the user to edit the variables within 'hotdogs.txt'.                     |     M     |
-# | B. Allow the user to revert the hotdogs.txt file to its previous state.           |     M     |
-# | C. Allow the user to reset the hotdogs.txt file to its initial state.             |     M     |
+# | A. Allow the user to edit the variables within 'hotdogs.txt'.                     |     Y     |
+# | B. Allow the user to revert the hotdogs.txt file to its previous state.           |     Y     |
+# | C. Allow the user to reset the hotdogs.txt file to its initial state.             |     Y     |
 # | D. Validate each variable within the hotdogs.txt file.                            |     Y     |
-# | E. Allow the user to add a new line to the hotdogs.txt file.                      |     M     |
+# | E. Allow the user to add a new line to the hotdogs.txt file.                      |     Y     |
 # +-----------------------------------------------------------------------------------+-----------+
 
 # Variable checking --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#[B]
@@ -79,7 +79,13 @@ for line in hotdog_data:                                                        
            ketchup_check = False                                                                                                                                                                                                                                #
                                                                                                                                                                                                                                                                 #
     if id_check == False or name_check == False or year_week_check == False or v_hotdog_check == False or m_hotdog_check == False or onion_check == False or ketchup_check == False:                                                                            #
-        print("\nError detected within one or more variables inside hotdogs.txt. Please undo the change or reset the data after running this code again.")                                                                                                      #
+        print("\nError detected within one or more variables inside hotdogs.txt. Undoing change...")                                                                                                                                                            #
+        input_file = open("hotdogsMemory.txt", "r")                                                                                                                                                                                                             #
+        output_file = open("hotdogs.txt", "w")                                                                                                                                                                                                                  #
+        for line in input_file:                                                                                                                                                                                                                                 #
+            output_file.write(line)                                                                                                                                                                                                                             #
+        input_file.close()                                                                                                                                                                                                                                      #
+        output_file.close()                                                                                                                                                                                                                                     #
         print(f"\nVariable checks:\nID check: {id_check}\nName check: {name_check}\nYear-week check: {year_week_check}\nVegan hotdog check: {v_hotdog_check}\nMeat hotdog check: {m_hotdog_check}\nOnion check: {onion_check}\nKetchup check: {ketchup_check}") #
         exit()                                                                                                                                                                                                                                                  #
 print("\nVariable checks passed, no errors detected in hotdogs.txt.")                                                                                                                                                                                           #
@@ -99,7 +105,8 @@ j = 1                                                                           
 for i in available_vendors:                                                                                                 #
     print(f" {j}. {i}")                                                                                                     #   
     j += 1                                                                                                                  # Print the available vendors in a numbered list for the user to see.
-search_query = str(input("\nPlease enter the name of the vendor you would like to search (2-25, or type ADMIN to edit): ")) # User inputs search query here
+available_vendors.append("Admin")                                                                                           # Adding "ADMIN" as an available vendor for the user to search, which will allow them to edit the data.
+search_query = str(input("\nPlease enter the name of the vendor you would like to search (2-25, or type Admin to edit): ")) # User inputs search query here
 search_query = search_query.title()                                                                                         # Program converts input into title-case
 #---------------------------------------------------------------------------------------------------------------------------+
 
@@ -107,6 +114,8 @@ search_query = search_query.title()                                             
 length_check = False                                                                        #
 available_check = False                                                                     #
 while length_check != True or available_check != True:                                      # "While either of these variables are False, run this piece of code until they are both True."
+    # Reset available_check at the start of each iteration                                  #
+    available_check = False                                                                 #
     # Length Validaton ------------------------------------+                                #
     if len(search_query) >= 2 and len(search_query) <= 25: #                                #[C] "If the length of the search query is between the inclusive range of 2 to 25...
         length_check = True                                #                                #     "...the length check becomes True."
@@ -121,12 +130,13 @@ while length_check != True or available_check != True:                          
     if search_query in available_vendors:        #                                          # "If the search query is found in our available vendors list..."
         available_check = True                   #                                          #  "...the avialbile check becomes True."
     #--------------------------------------------#                                          #
+    if search_query == "Admin": #                                                           # "If the user inputs 'ADMIN' as the search query..."
+        print("Admin mode activated:") #                                                    #  "...tell the user that admin mode is activated..."
+        available_check = True                   #                                          #  "...set available_check to True and break..."
+        break                                                                               #  "...and break out of the while loop early."
     if length_check != True or available_check != True:                                     # "If, after all the validations, either check is still false..."
         search_query = str(input("Vendor not found, or name out of length range (2-25): ")) #  "...tell the user to input the query again with an error message."
         search_query = search_query.title()                                                 # Converting Search_query To Title Case
-    if search_query == "ADMIN": #                                                           # "If the user inputs 'ADMIN' as the search query..."
-        print("Admin mode activated:") #                                                    #  "...tell the user that admin mode is activated..."
-        break                                                                               #  "...and break out of the while loop early."
 #-------------------------------------------------------------------------------------------#
 
 # Array handling -----------------------+
@@ -141,15 +151,15 @@ for line in file:                       #[A]
 #---------------------------------------# ...the code can't be given an incorrect vendor name that doesn't exist.
 
 # Admin editing ---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-if search_query == "ADMIN":                                                                                                                                                          #
+if search_query == "Admin":                                                                                                                                                          #
     print("\nAdmin options:\n 1. Edit a variable\n 2. Revert the file to its previous state\n 3. Reset the file to its initial state\n 4. Add lines")                                # Admin options shown to user
     admin_choice = str(input("Please enter the number of the admin option you would like to use: "))                                                                                 # User inputs admin choice here
     while admin_choice not in ["1", "2", "3", "4"] or admin_choice == "":                                                                                                            # Looping validation for admin choice
         admin_choice = str(input("Invalid input, please enter a valid admin option: "))                                                                                              #
     if admin_choice == "1":                                                                                                                                                          #
-        line_edit = str(input(f"What line would you like to edit? (1 - {max_lines}"))                                                                                                #
+        line_edit = int(input(f"What line would you like to edit? (1 - {max_lines}): "))                                                                                             #
         while line_edit < 1 or line_edit > max_lines or isinstance(line_edit, int) == False or line_edit == "":                                                                      #
-            line_edit = str(input("Invalid input, please enter an integer in range."))                                                                                               #
+            line_edit = str(input("Invalid input, please enter an integer in range: "))                                                                                              #
                                                                                                                                                                                      #
         file = open("hotdogs.txt", "r")                                                                                                                                              #
         lines = []                                                                                                                                                                   #
@@ -158,19 +168,19 @@ if search_query == "ADMIN":                                                     
         file.close()                                                                                                                                                                 #
         editing_line = lines[line_edit-1].strip().split(",")                                                                                                                         #
         print(f"Current line: {lines[line_edit-1]}")                                                                                                                                 #
-        variable_edit = str(input("What variable would you like to edit? (1. vendor_id, 2. vendor_name, 3. year_week, 4. vegan_hotdogs, 5. meat_hotdogs, 6. onions, 7. ketchup): ")) #
-        while variable_edit not in ["1", "2", "3", "4", "5", "6", "7"] or variable_edit == "" or isinstance(variable_edit, int) == False:                                            #
-            variable_edit = str(input("Invalid input, please enter an integer in range: "))                                                                                          #
-        if variable_edit in ["1", "2"]:                                                                                                                                              #
+        variable_edit = int(input("What variable would you like to edit? (1. vendor_id, 2. vendor_name, 3. year_week, 4. vegan_hotdogs, 5. meat_hotdogs, 6. onions, 7. ketchup): ")) #
+        while variable_edit not in [1, 2, 3, 4, 5, 6, 7] or variable_edit == "" or isinstance(variable_edit, int) == False:                                                          #
+            variable_edit = int(input("Invalid input, please enter an integer in range: "))                                                                                          #
+        if variable_edit in [1, 2]:                                                                                                                                              #
             new_value = str(input("What would you like to change the variable to?: "))                                                                                               #
-        elif variable_edit == "3":                                                                                                                                                   #
-            new_value = str(input("What would you like to change the variable to? (Format: YYYYWW, where YYYY [2000-2026]is the year and WW [01-52] is the week number): "))         #
-        elif variable_edit in ["4", "5"]:                                                                                                                                            #
-            new_value = str(input("What would you like to change the variable to? (Must be an integer, and a multiple of 10): "))                                                    #
-        elif variable_edit == "6":                                                                                                                                                   #
-            new_value = str(input("What would you like to change the variable to? (Must be a float, and divisible by 0.5): "))                                                       #
+        elif variable_edit == 3:                                                                                                                                                   #
+            new_value = int(input("What would you like to change the variable to? (Format: YYYYWW, where YYYY [2000-2026] is the year and WW [01-52] is the week number): "))        #
+        elif variable_edit in [4, 5]:                                                                                                                                            #
+            new_value = int(input("What would you like to change the variable to? (Must be an integer, and a multiple of 10): "))                                                    #
+        elif variable_edit == 6:                                                                                                                                                   #
+            new_value = float(input("What would you like to change the variable to? (Must be a float, and divisible by 0.5): "))                                                     #
         else:                                                                                                                                                                        #
-            new_value = str(input("What would you like to change the variable to? (Must be an integer between 1 and 4, inclusive): "))                                               #
+            new_value = int(input("What would you like to change the variable to? (Must be an integer between 1 and 4, inclusive): "))                                               #
                                                                                                                                                                                      #
         read_file = open("hotdogs.txt", "r")                                                                                                                                         #
         write_file = open("hotdogsMemory.txt", "w")                                                                                                                                  #
@@ -224,10 +234,11 @@ if search_query == "ADMIN":                                                     
             new_vendor_id = str(input("Enter the new vendor's ID (Format: XX_000, where X is an uppercase letter and 0 is a digit): "))                                              #        
             new_vendor_name = str(input("Enter the new vendor's name: "))                                                                                                            #
             new_year_week = str(input("Enter the year and week of the data (Format: YYYYWW, where YYYY [2000-2026] is the year and WW [01-52] is the week number): "))               #
-            new_vegan_hotdogs = str(input("Enter the number of vegan hotdogs supplied (Must be an integer, and a multiple of 10): "))                                                #
-            new_meat_hotdogs = str(input("Enter the number of meat hotdogs supplied (Must be an integer, and a multiple of 10): "))                                                  #
-            new_onions = str(input("Enter the amount of onions supplied (Must be a float, and divisible by 0.5): "))                                                                 #
-            new_ketchup = str(input("Enter the amount of ketchup supplied (Must be an integer between 1 and 4, inclusive): "))                                                       #
+            new_vegan_hotdogs = int(input("Enter the number of vegan hotdogs supplied (Must be an integer, and a multiple of 10): "))                                                #
+            new_meat_hotdogs = int(input("Enter the number of meat hotdogs supplied (Must be an integer, and a multiple of 10): "))                                                  #
+            new_onions = float(input("Enter the amount of onions supplied (Must be a float, and divisible by 0.5): "))                                                               #
+            new_ketchup = int(input("Enter the amount of ketchup supplied (Must be an integer between 1 and 4, inclusive): "))                                                       #
+            print(f"New line to be added:\n{new_vendor_id},{new_vendor_name},{new_year_week},{new_vegan_hotdogs},{new_meat_hotdogs},{new_onions},{new_ketchup}")                     #
             append_file.write(f"{new_vendor_id},{new_vendor_name},{new_year_week},{new_vegan_hotdogs},{new_meat_hotdogs},{new_onions},{new_ketchup}\n")                              #
                                                                                                                                                                                      #
     print("Admin choice executed, please run the code again to check the functionality of the data.")                                                                                # Message to user after admin choice is executed
