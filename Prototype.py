@@ -350,7 +350,7 @@ while query_check != True:                                                      
         user_search = int(input("What category would you like to search the data in? (Enter a number from 1 to 7): "))                          # ||Ask user to input an INTEGER from 1 to 7, inclusive
         for i in [0, len(hotdogs_data)]:                                                                                                        # ||For every number in range of 0 to the length of hotdogs_data
             while user_search < 1 or user_search > 7 or user_search == "":                                                                      # |||While user_search is less than 1, more than 7, or is "":
-                user_search = int(input("Category not found, ensure input is within range: "))                                                  # ||||Prints error messages, and asks for valid input
+                user_search = int(input("Category not found, ensure input is within range: "))                                                  # ||||Prints error messages, and asks again for valid input
         if user_search > 1 or user_search < 7:                                                                                                  # ||If user_search is more than 1 or less than 7
            query_check = True                                                                                                                   # ||Query_check is turned True
     except ValueError:                                                                                                                          # |Except error called to stop code crash
@@ -361,87 +361,87 @@ while query_check != True:                                                      
 def filter_scraper(target_filter, vendor_name, hotdogs_data, hidden):         # Defines filter scraper algorithm
     file = open("hotdogs.txt", "r")                                           # |Opens hotdogs file in read mode
     items = []                                                                # |Sets empty list as items
-    i = 0                                                                     #
-    for line in file:                                                         #
-        i += 1                                                                #
-        segment = []                                                          #
-        line = line.strip().split(",")                                        #
-        if vendor_name in line:                                               #
-            segment = line[target_filter-1]                                   #
-            items.append(segment)                                             #
-    if not hidden:                                                            #
-        print(f"{target_filter} for {vendor_name}: {items}")                  #
-    file.close()                                                              #
-    return items                                                              #
+    i = 0                                                                     # |Creates i variable inside algorithm
+    for line in file:                                                         # |For everu line in hotdogs file:
+        i += 1                                                                # ||i is incremented by 1
+        segment = []                                                          # ||Segment list is emptied
+        line = line.strip().split(",")                                        # ||Line is stripped and splitted
+        if vendor_name in line:                                               # |If the vendor_name is in the line list
+            segment = line[target_filter-1]                                   # ||Segment is the line list's index using one less of the target_filter
+            items.append(segment)                                             # ||Appends segment to items list
+    if not hidden:                                                            # |If hidden is not true:
+        print(f"{target_filter} for {vendor_name}: {items}")                  # ||Prints messgae, telling user their target filter, the vendor name, and the items found
+    file.close()                                                              # |Closes file
+    return items                                                              # |Returns scraped items
                                                                               #
-items = filter_scraper(user_search, search_query, hotdogs_data, hidden=False) #
+items = filter_scraper(user_search, search_query, hotdogs_data, hidden=False) # |Items equal the algorithms call of the 4 arguments listed, with hidden being false to show the user the print message
 #-----------------------------------------------------------------------------+
 
 # Sorting if wanted ----------------------------------------------------------------------------------------------------+
-sort_input = str(input("\nWould you like to sort the data before searching? (Y/N): "))                                  #
-sort_options = ["Bubble Sort", "Quick Sort"]                                                                            #
-while sort_input != "Y" and sort_input != "N" or sort_input == "":                                                      #
-    sort_input = str(input("Invalid input, please enter Y or N: "))                                                     #
-if sort_input == "Y":                                                                                                   #
-    sort_choice = str(input(f"Which sorting algorithm would you like to use? ({sort_options[0]}/{sort_options[1]}): ")) #
-    while sort_choice not in sort_options or sort_choice == "":                                                         #
-        sort_choice = str(input("Invalid input, please enter a valid sorting algorithm: "))                             #
-    if sort_choice == sort_options[0]:                                                                                  #
-        items = bubble_sort(items, hidden=False, request="items")                                                       #
-    else:                                                                                                               #
-        items = quick_sort(items, hidden=False, request="items")                                                        #
+sort_input = str(input("\nWould you like to sort the data before searching? (Y/N): "))                                  # Sort input is taken from user
+sort_options = ["Bubble Sort", "Quick Sort"]                                                                            # Sort options are "Bubble Sort" and "Quick Sort"
+while sort_input != "Y" and sort_input != "N" or sort_input == "":                                                      # While the input from user is not "Y", not "N", or is "":
+    sort_input = str(input("Invalid input, please enter Y or N: "))                                                     # |Asks user again for valid sort input
+if sort_input == "Y":                                                                                                   # If the sort input is "Y":
+    sort_choice = str(input(f"Which sorting algorithm would you like to use? ({sort_options[0]}/{sort_options[1]}): ")) # |Sorting code initiated, asking user for algorithm choice
+    while sort_choice not in sort_options or sort_choice == "":                                                         # |While the choice input is not in sort_options list or is "":
+        sort_choice = str(input("Invalid input, please enter a valid sorting algorithm: "))                             # ||Asks user again for valid choice input
+    if sort_choice == sort_options[0]:                                                                                  # |If sort choice is index 0 of sort_options ("Bubble Sort"):
+        items = bubble_sort(items, hidden=False, request="items")                                                       # ||Items is sorted through the bubble sort algorithm
+    else:                                                                                                               # |Else ("Quick Sort"):
+        items = quick_sort(items, hidden=False, request="items")                                                        # ||Items is sorted through the quick sort algorithm
 #-----------------------------------------------------------------------------------------------------------------------+
 
 # Searching ----------------------------------------------------------------------------------------------------------------+
-target = str(input("What is your search query?: "))                                                                         #
-while target not in items or target == "":                                                                                  #
-    target = str(input("Query not found, please enter a valid query: "))                                                    #
+target = str(input("What is your search query?: "))                                                                         # Target input is taken from user
+while target not in items or target == "":                                                                                  # |While target input is not in items, or is "":
+    target = str(input("Query not found, please enter a valid query: "))                                                    # ||Asks user for valid target input
                                                                                                                             #
-search_options = ["Linear Search", "Binary Search"]                                                                         #
-search_choice = str(input(f"Which searching algorithm would you like to use? ({search_options[0]}/{search_options[1]}): ")) #
-while search_choice not in search_options or search_choice == "":                                                           #
-    search_choice = str(input("Invalid input, please enter a valid searching algorithm: "))                                 #
-if search_choice == search_options[0]:                                                                                      #
-    linear_search(items, target, False, "placeholder")                                                                      #
-else:                                                                                                                       #
-    print("WARNING: Binary Search requires sorting before it is used.")                                                     # This warning is put in place because binary sort requires a sorted list.
-    binary_search(items, target, False, "placeholder")                                                                      #
+search_options = ["Linear Search", "Binary Search"]                                                                         # Creates search options with "Linear Search" and "Binary Search"
+search_choice = str(input(f"Which searching algorithm would you like to use? ({search_options[0]}/{search_options[1]}): ")) # Search choice is taken from the printed info message, accurately telling the user of the choices available
+while search_choice not in search_options or search_choice == "":                                                           # |While search choice is not in search options list, or is "":
+    search_choice = str(input("Invalid input, please enter a valid searching algorithm: "))                                 # ||Asks user again for valid choice input
+if search_choice == search_options[0]:                                                                                      # |If search choice is index 0 of search_options ("Linear Search"):
+    linear_search(items, target, False, "placeholder")                                                                      # ||Items is searched through the linear search algorithm
+else:                                                                                                                       # |Else ("Binary Search"):
+    print("WARNING: Binary Search requires sorting before it is used.")                                                     # ||<-- This warning is put in place because binary sort requires a sorted list
+    binary_search(items, target, False, "placeholder")                                                                      # ||Items is searched through the binary search algorithm
 #---------------------------------------------------------------------------------------------------------------------------+
 
 # Secondary variable association --------------------------------------+ Calling filter scraper algorithm with different target filters.
 v_hotdogs = filter_scraper(4, search_query, hotdogs_data, hidden=True) # 4 = vegan_hotdogs
-total_v_hotdogs = 0                                                    #
-for i in v_hotdogs:                                                    #
-    total_v_hotdogs += int(i)                                          #
+total_v_hotdogs = 0                                                    # Creates total vegan hotdog counter
+for i in v_hotdogs:                                                    # For every index in v_hotdogs:
+    total_v_hotdogs += int(i)                                          # |Increment the total vegan hotdog counter by i, converted to an integer.
                                                                        #
 m_hotdogs = filter_scraper(5, search_query, hotdogs_data, hidden=True) # 5 = meat_hotdogs
-total_m_hotdogs = 0                                                    #
-for i in m_hotdogs:                                                    #
-    total_m_hotdogs += int(i)                                          #
+total_m_hotdogs = 0                                                    # Creates total meat hotdog counter
+for i in m_hotdogs:                                                    # For every index in m_hotdogs:
+    total_m_hotdogs += int(i)                                          # |Increment the total meat hotdog counter by i, converted to an integer.
                                                                        #
 onions = filter_scraper(6, search_query, hotdogs_data, hidden=True)    # 6 = onions
-total_onions = 0                                                       #
-for i in onions:                                                       #
-    total_onions += float(i)                                           #
+total_onions = 0                                                       # Creates total onions counter
+for i in onions:                                                       # For every index in onions:
+    total_onions += float(i)                                           # |Increment the total onions counter by i, converted to an integer.
                                                                        #
 ketchup = filter_scraper(7, search_query, hotdogs_data, hidden=True)   # 7 = ketchup
-total_ketchup = 0                                                      #
-for i in ketchup:                                                      #
-    total_ketchup += int(i)                                            #
+total_ketchup = 0                                                      # Creates total ketchup counter
+for i in ketchup:                                                      # For every index in ketchup:
+    total_ketchup += int(i)                                            # |Increment the total ketchup counter by i, converted to an integer.
                                                                        #
-file.close()                                                           #
+file.close()                                                           # Closes file
 #----------------------------------------------------------------------+
 
 # Background algorithms hidden from user ---------------------------------------+
 items = filter_scraper(user_search, search_query, hotdogs_data, hidden=True)    # Resetting items to original state
                                                                                 #
-linear_steps = linear_search(items, target, hidden=True, request="placeholder") # Sorting for binary search
-bubble_sort(items, hidden=True, request="placeholder")                          #
-binary_steps = binary_search(items, target, hidden=True, request="placeholder") # Searching with binary_search algorithm
+linear_steps = linear_search(items, target, hidden=True, request="placeholder") # Linear steps is the linear search algorithm, with hidden as True
+bubble_sort(items, hidden=True, request="placeholder")                          # Sorts items using bubble sort algorithm for binary search algorithm to work properly
+binary_steps = binary_search(items, target, hidden=True, request="placeholder") # BInary steps is the binary search algorithm, with hidden as True
                                                                                 #
 items = filter_scraper(user_search, search_query, hotdogs_data, hidden=True)    # Resetting items to original state for sorting algorithms
-bubble_swaps = bubble_sort(items, hidden=True, request="swaps")                 #
-quick_swaps = quick_sort(items, hidden=True, request="swaps")                   #
+bubble_swaps = bubble_sort(items, hidden=True, request="swaps")                 # Bubble swaps is the bubble sort algorithm, with hidden as True and request as "swaps"
+quick_swaps = quick_sort(items, hidden=True, request="swaps")                   # Quick swaps is the quick sort algorithm, with hidden as True and request as "swaps"
 #-------------------------------------------------------------------------------+
 
 # Analysis output! =========================================================================================================================================================================+
