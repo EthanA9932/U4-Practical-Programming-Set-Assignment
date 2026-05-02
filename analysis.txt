@@ -6,7 +6,7 @@ Total amount of onions supplied: 126.0
 Total amount of ketchup supplied: 17
 -------------------------------------------------------
 Algorithm comparisons:
-Linear search found 25.5 in 4 steps, and took 2.96 microseconds.
-Binary search, after sorting, found 25.5 in 3 steps, and took 4.12 microseconds.
-Bubble sort sorted 8 items in 11 steps, and took 7.46 microseconds.
-Quick sort sorted 8 items in 8 steps, and took 4.25 microseconds.
+Linear search found 25.5 in 4 steps, and took 3.46 microseconds.
+Binary search, after sorting, found 25.5 in 3 steps, and took 5.04 microseconds.
+Bubble sort sorted 8 items in 11 steps, and took 8.08 microseconds.
+Quick sort sorted 8 items in 8 steps, and took 5.54 microseconds.

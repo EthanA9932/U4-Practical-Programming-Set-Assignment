@@ -38,64 +38,188 @@
 # | E. Allow the user to add a new line to the hotdogs.txt file.                      |     Y     |
 # +-----------------------------------------------------------------------------------+-----------+
 
+# Global filename variable
+filename = "hotdogs.txt"
+
+def check_file_integrity(filename):
+    """
+    Checks the integrity of the first line in the hotdogs.txt file.
+    Returns (True, "success message") if valid, (False, "error message") if invalid.
+    """
+    try:
+        with open(filename, 'r') as file:
+            first_line = file.readline().strip()
+            if not first_line:
+                return False, "File is empty"
+            
+            parts = first_line.split(',')
+            if len(parts) != 7:
+                return False, "Incorrect number of fields (expected 7)"
+            
+            # Check vendor_id: XX_000 format
+            if not (len(parts[0]) == 6 and parts[0][:2].isupper() and parts[0][2] == '_' and parts[0][3:].isdigit()):
+                return False, "Invalid vendor_id format (expected XX_000)"
+            
+            # Check vendor_name: 2-25 characters
+            if not (2 <= len(parts[1]) <= 25):
+                return False, "Invalid vendor_name length (expected 2-25 characters)"
+            
+            # Check year_week: YYYYWW format, year 2000-2026, week 01-52
+            if not (len(parts[2]) == 6 and parts[2].isdigit() and 2000 <= int(parts[2][:4]) <= 2026 and 1 <= int(parts[2][4:]) <= 52):
+                return False, "Invalid year_week format (expected YYYYWW with valid year/week)"
+            
+            # Check vegan_hotdogs: integer multiple of 10
+            try:
+                v = int(parts[3])
+                if v % 10 != 0:
+                    return False, "Vegan hotdogs not a multiple of 10"
+            except ValueError:
+                return False, "Invalid vegan_hotdogs (expected integer)"
+            
+            # Check meat_hotdogs: integer multiple of 10
+            try:
+                m = int(parts[4])
+                if m % 10 != 0:
+                    return False, "Meat hotdogs not a multiple of 10"
+            except ValueError:
+                return False, "Invalid meat_hotdogs (expected integer)"
+            
+            # Check onions: float multiple of 0.5
+            try:
+                o = float(parts[5])
+                if o % 0.5 != 0:
+                    return False, "Onions not a multiple of 0.5"
+            except ValueError:
+                return False, "Invalid onions (expected float)"
+            
+            # Check ketchup: integer 1-4
+            try:
+                k = int(parts[6])
+                if not (1 <= k <= 4):
+                    return False, "Ketchup out of range (expected 1-4)"
+            except ValueError:
+                return False, "Invalid ketchup (expected integer 1-4)"
+            
+            return True, "File integrity check passed"
+    except FileNotFoundError:
+        return False, "File not found"
+    except Exception as e:
+        return False, f"Error reading file: {e}"
+
+def validate_all_lines(hotdog_data, filename):
+    """
+    Validates all lines in the hotdog data file.
+    Checks each field against required format and constraints.
+    Exits with error if validation fails, otherwise closes file and returns success.
+    """
+
+    for line in hotdog_data:
+        fields = line.strip().split(',')
+
+        checks = []
+
+        for index, value in enumerate(fields):
+            match index:
+                case 0:  # ID
+                    checks.append(
+                        len(value) == 6
+                        and value[0].isupper()
+                        and value[1].isupper()
+                        and value[2] == "_"
+                        and value[3:].isdigit()
+                    )
+
+                case 1:  # Name
+                    checks.append(2 <= len(value) <= 25)
+
+                case 2:  # Year-week
+                    checks.append(
+                        len(value) == 6
+                        and value.isdigit()
+                        and 2000 <= int(value[:4]) <= 2026
+                        and 1 <= int(value[4:]) <= 52
+                    )
+
+                case 3:  # Vegan hotdog count
+                    checks.append(
+                        value.replace('.', '', 1).isdigit()
+                        and float(value) % 10 == 0
+                    )
+
+                case 4:  # Meat hotdog count
+                    checks.append(
+                        value.isdigit()
+                        and int(value) % 10 == 0
+                    )
+
+                case 5:  # Onion amount
+                    try:
+                        f = float(value)
+                        checks.append(f % 0.5 == 0)
+                    except ValueError:
+                        checks.append(False)
+
+                case 6:  # Ketchup level
+                    checks.append(
+                        value.isdigit()
+                        and 1 <= int(value) <= 4
+                    )
+
+                case _:  # Unexpected extra fields
+                    checks.append(False)
+
+        # If any check failed
+        if not all(checks):
+            print(f"\nError detected within one or more variables inside {filename}. Undoing change...")
+
+            with open("hotdogsMemory.txt", "r") as input_file, open(filename, "w") as output_file:
+                for old_line in input_file:
+                    output_file.write(old_line)
+
+            print("\nVariable checks:")
+            print(f"ID check: {checks[0]}")
+            print(f"Name check: {checks[1]}")
+            print(f"Year-week check: {checks[2]}")
+            print(f"Vegan hotdog check: {checks[3]}")
+            print(f"Meat hotdog check: {checks[4]}")
+            print(f"Onion check: {checks[5]}")
+            print(f"Ketchup check: {checks[6]}")
+            exit()
+
+    print(f"\nVariable checks passed, no errors detected in {filename}.")
+    hotdog_data.close()
+
 # Variable checking --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#[B]
-hotdog_data = open("hotdogs.txt", "r")                                                                                                                                                                                                                          # Opens file
+import os
+
+file_found = False
+while not file_found:
+    filename = input("Enter the filename to open (default: hotdogs.txt): ").strip()
+    if filename == "":
+        filename = "hotdogs.txt"
+    
+    if os.path.exists(filename):
+        # Perform file integrity check on the first line
+        integrity_passed, integrity_message = check_file_integrity(filename)
+        if integrity_passed:
+            try:
+                hotdog_data = open(filename, "r")
+                file_found = True
+                print(f"File '{filename}' found and opened successfully.\n{integrity_message}\n")
+            except IOError as e:
+                print(f"Error opening {filename}: {e}\n")
+        else:
+            print(f"File integrity check failed: {integrity_message}\nPlease try again.\n")
+    else:
+        print(f"Error: {filename} file not found. Please try again.\n")
                                                                                                                                                                                                                                                                 #
-for line in hotdog_data:                                                                                                                                                                                                                                        # For every line in file:
-    i = line.strip().split(',')                                                                                                                                                                                                                                 # |Strip the line, and make it a list
-    if len(i[0]) == 6 and i[0][0].isupper() == True and i[0][1].isupper() == True and i[0][2] == "_" and i[0][3].isdigit() == True and i[0][4].isdigit() == True and i[0][5].isdigit() == True:                                                                 # |If variable n is valid, where n is the index of the variable checked:
-        id_check = True                                                                                                                                                                                                                                         # ||Make its own check variable True
-    else:                                                                                                                                                                                                                                                       # |Else:
-        id_check = False                                                                                                                                                                                                                                        # ||Make its own check variable False
-                                                                                                                                                                                                                                                                #
-    if len(i[1]) >= 2 and len(i[1]) <= 25:                                                                                                                                                                                                                      #
-        name_check = True                                                                                                                                                                                                                                       #
-    else:                                                                                                                                                                                                                                                       #
-        name_check = False                                                                                                                                                                                                                                      #
-                                                                                                                                                                                                                                                                #
-    if len(i[2]) == 6 and i[2].isdigit() and 2000 <= int(i[2][:4]) <= 2026 and 1 <= int(i[2][4:]) <= 52:                                                                                                                                                        #
-        year_week_check = True                                                                                                                                                                                                                                  #
-    else:                                                                                                                                                                                                                                                       #
-        year_week_check = False                                                                                                                                                                                                                                 #
-                                                                                                                                                                                                                                                                #
-    if isinstance(float(i[3]), float) == True and isinstance(int(i[3]) % 10, int) == True:                                                                                                                                                                      #
-        v_hotdog_check = True                                                                                                                                                                                                                                   #
-    else:                                                                                                                                                                                                                                                       #
-        v_hotdog_check = False                                                                                                                                                                                                                                  #
-                                                                                                                                                                                                                                                                #
-    if isinstance(int(i[4]), int) == True and isinstance(int(i[4]) % 10, int) == True:                                                                                                                                                                          #
-        m_hotdog_check = True                                                                                                                                                                                                                                   #
-    else:                                                                                                                                                                                                                                                       #
-        m_hotdog_check = False                                                                                                                                                                                                                                  #
-                                                                                                                                                                                                                                                                #
-    if isinstance(float(i[5]), float) == True and (float(i[5]) % 0.5 == 0) == True:                                                                                                                                                                             #
-        onion_check = True                                                                                                                                                                                                                                      #
-    else:                                                                                                                                                                                                                                                       #
-        onion_check = False                                                                                                                                                                                                                                     #
-                                                                                                                                                                                                                                                                #
-    if isinstance(int(i[6]), int) == True and 1 <= int(i[6]) <= 4:                                                                                                                                                                                              #
-        ketchup_check = True                                                                                                                                                                                                                                    #
-    else:                                                                                                                                                                                                                                                       #
-           ketchup_check = False                                                                                                                                                                                                                                #
-                                                                                                                                                                                                                                                                #
-    if id_check == False or name_check == False or year_week_check == False or v_hotdog_check == False or m_hotdog_check == False or onion_check == False or ketchup_check == False:                                                                            # If any check made is false:
-        print("\nError detected within one or more variables inside hotdogs.txt. Undoing change...")                                                                                                                                                            # |Prints error message for user and announces undoing of file
-        input_file = open("hotdogsMemory.txt", "r")                                                                                                                                                                                                             # |Admin option 1
-        output_file = open("hotdogs.txt", "w")                                                                                                                                                                                                                  # |
-        for line in input_file:                                                                                                                                                                                                                                 # |
-            output_file.write(line)                                                                                                                                                                                                                             # |
-        input_file.close()                                                                                                                                                                                                                                      # |
-        output_file.close()                                                                                                                                                                                                                                     # |
-        print(f"\nVariable checks:\nID check: {id_check}\nName check: {name_check}\nYear-week check: {year_week_check}\nVegan hotdog check: {v_hotdog_check}\nMeat hotdog check: {m_hotdog_check}\nOnion check: {onion_check}\nKetchup check: {ketchup_check}") # |Prints the current state of each variable
-        exit()                                                                                                                                                                                                                                                  # |Exits code early
-print("\nVariable checks passed, no errors detected in hotdogs.txt.")                                                                                                                                                                                           # Prints success message for user
-hotdog_data.close()                                                                                                                                                                                                                                             # Closes file
+validate_all_lines(hotdog_data, filename)
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
 
 # Creating variables and setting up foundational information ---------------------------------------------------------------+
 import time                                                                                                                 # Importing Module
 available_vendors = []                                                                                                      # Initial variable assignment
-for line in open("hotdogs.txt", "r"):                                                                                       # Looping through the lines in the text file
+for line in open(filename, "r"):                                                                                             # Looping through the lines in the text file
     line = line.strip().split(",")                                                                                          # Strip the line from its commas, and set it as our available vendors list.
     vendor_name = line[1]                                                                                                   # Vendor name is the 2nd item in the list
     if vendor_name not in available_vendors:                                                                                # If vendor_name is not already in available_vendors:
@@ -142,7 +266,7 @@ while length_check != True or available_check != True:                          
 # Array handling -----------------------+
 hotdogs_data = []                       # Creates hotdog_data list
 max_lines = 0                           # Initialises lines cap variable
-file = open("hotdogs.txt", "r")         # Opens hotdogs file
+file = open(filename, "r")              # Opens hotdogs file
 for line in file:                       #[A]
     if line.find(search_query) != -1:   # If the search query is found in the line...
         parts = line.strip().split(",") # |...strip the line from its commas...
@@ -161,7 +285,7 @@ if search_query == "Admin":                                                     
         while line_edit < 1 or line_edit > max_lines or isinstance(line_edit, int) == False or line_edit == "":                                                                      # |Checks if integer is not in range of 1 to lines cap
             line_edit = str(input("Invalid input, please enter an integer in range: "))                                                                                              # | If not, then asks user again for input
                                                                                                                                                                                      # |
-        file = open("hotdogs.txt", "r")                                                                                                                                              # |Opens hotdogs file
+        file = open(filename, "r")                                                                                                                                                 # |Opens hotdogs file
         lines = []                                                                                                                                                                   # |Creates empty list
         for line in file:                                                                                                                                                            # |For every line in file:
             lines.append(line)                                                                                                                                                       # | Append the line to the line list
@@ -182,7 +306,7 @@ if search_query == "Admin":                                                     
         else:                                                                                                                                                                        # |
             new_value = int(input("What would you like to change the variable to? (Must be an integer between 1 and 4, inclusive): "))                                               # |
                                                                                                                                                                                      # |
-        read_file = open("hotdogs.txt", "r")                                                                                                                                         # |Opens hotdogs file in read mode
+        read_file = open(filename, "r")                                                                                                                                         # |Opens hotdogs file in read mode
         write_file = open("hotdogsMemory.txt", "w")                                                                                                                                  # |Opens hotdogsMemory file in write mode
         for line in read_file:                                                                                                                                                       # |Writes every line from reading file to writing file, saving it
             write_file.write(line)                                                                                                                                                   # |
@@ -193,14 +317,14 @@ if search_query == "Admin":                                                     
         lines[line_edit-1][int(variable_edit)-1] = new_value                                                                                                                         # ||as the line is split into a list, then the variable is edited,
         lines[line_edit-1] = ",".join(lines[line_edit-1]) + "\n"                                                                                                                     # ||then the list is joined back into a string with commas.
                                                                                                                                                                                      # |
-        file = open("hotdogs.txt", "w")                                                                                                                                              # |Opens hotdogs file in write mode
+        file = open(filename, "w")                                                                                                                                              # |Opens hotdogs file in write mode
         for i in lines:                                                                                                                                                              # |Writes every entry from lines list into it
             file.write(lines[lines.index(i)])                                                                                                                                        # |
         file.close()                                                                                                                                                                 # |
                                                                                                                                                                                      #
     elif admin_choice == "2":                                                                                                                                                        # If admin option is "2":
         input_file = open("hotdogsMemory.txt", "r")                                                                                                                                  # |Opens hotdogsMemory file in read mode
-        output_file = open("hotdogs.txt", "w")                                                                                                                                       # |Opens hotdogs file in write mode
+        output_file = open(filename, "w")                                                                                                                                       # |Opens hotdogs file in write mode
         for line in input_file:                                                                                                                                                      # |Writes every line from Memory file into hotdogs file
             output_file.write(line)                                                                                                                                                  # ||
         input_file.close()                                                                                                                                                           # |Closes both files
@@ -208,7 +332,7 @@ if search_query == "Admin":                                                     
                                                                                                                                                                                      #
     elif admin_choice == "3":                                                                                                                                                        # If admin option is "3":
         input_file = open("hotdogsOrigin.txt", "r")                                                                                                                                  # |Opens hotdogsOrigin file in read mode
-        output_file = open("hotdogs.txt", "w")                                                                                                                                       # |Opens hotdogs file in write mode
+        output_file = open(filename, "w")                                                                                                                                       # |Opens hotdogs file in write mode
         for line in input_file:                                                                                                                                                      # |Writes every line from Origin file into hotdogs file
             output_file.write(line)                                                                                                                                                  # ||
         input_file.close()                                                                                                                                                           # |Closes both files
@@ -222,7 +346,7 @@ if search_query == "Admin":                                                     
             print("Admin choice cancelled, please run the code again to check the functionality of the data.")                                                                       # ||Prints end line message to user
             exit()                                                                                                                                                                   # ||Ends code early
         if new_line_continue == "Y":                                                                                                                                                 # |If the input was "Y":
-            read_file = open("hotdogs.txt", "r")                                                                                                                                     # ||Opens hotdogs file in read mode
+            read_file = open(filename, "r")                                                                                                                                     # ||Opens hotdogs file in read mode
             write_file = open("hotdogsMemory.txt", "w")                                                                                                                              # ||Opens hotdogsMemory file in write mode
                                                                                                                                                                                      # |
             for line in read_file:                                                                                                                                                   # ||Writes every line from hotdogs file to hotdogsMemory file
@@ -230,7 +354,7 @@ if search_query == "Admin":                                                     
             write_file.close()                                                                                                                                                       # |Closes both files
             read_file.close()                                                                                                                                                        # ||
                                                                                                                                                                                      # ||
-            append_file = open("hotdogs.txt", "a")                                                                                                                                   # |Appending hotdogs.txt with new line
+            append_file = open(filename, "a")                                                                                                                                    # |Appending hotdogs.txt with new line
             new_vendor_id = str(input("Enter the new vendor's ID (Format: XX_000, where X is an uppercase letter and 0 is a digit): "))                                              # |Adding varioables one by one
             new_vendor_name = str(input("Enter the new vendor's name: "))                                                                                                            # |
             new_year_week = str(input("Enter the year and week of the data (Format: YYYYWW, where YYYY [2000-2026] is the year and WW [01-52] is the week number): "))               # |WARNING:
@@ -359,7 +483,7 @@ while query_check != True:                                                      
 
 # Filtering data -------------------------------------------------------------+
 def filter_scraper(target_filter, vendor_name, hotdogs_data, hidden):         # Defines filter scraper algorithm
-    file = open("hotdogs.txt", "r")                                           # |Opens hotdogs file in read mode
+    file = open(filename, "r")                                               # |Opens hotdogs file in read mode
     items = []                                                                # |Sets empty list as items
     i = 0                                                                     # |Creates i variable inside algorithm
     for line in file:                                                         # |For everu line in hotdogs file:
