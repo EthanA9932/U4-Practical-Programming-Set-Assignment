@@ -325,3 +325,11 @@ GitHub Copilot:
 User: in #sym:validate_all_lines can you replace the if statements with a case statement
 
 GitHub Copilot: Compacted conversationYou've used 83% of your session rate limit. Your session rate limit will reset on 2 May at 18:10. [Learn More](https://aka.ms/github-copilot-rate-limit-error)
+
+User: Can I go to a specific part of my program, i.e goto a specific line, run the code from that line downwards, and exit with a command?
+
+GitHub Copilot: 
+
+User: Can I go to a specific part of my program, i.e goto a specific line, run the code from that line downwards, and exit with a command?
+
+GitHub Copilot: 

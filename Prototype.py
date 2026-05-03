@@ -483,7 +483,7 @@ while query_check != True:                                                      
 
 # Filtering data -------------------------------------------------------------+
 def filter_scraper(target_filter, vendor_name, hotdogs_data, hidden):         # Defines filter scraper algorithm
-    file = open(filename, "r")                                               # |Opens hotdogs file in read mode
+    file = open(filename, "r")                                                # |Opens hotdogs file in read mode
     items = []                                                                # |Sets empty list as items
     i = 0                                                                     # |Creates i variable inside algorithm
     for line in file:                                                         # |For everu line in hotdogs file:
